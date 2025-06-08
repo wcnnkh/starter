@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.12.RELEASE</version>
+		<version>2.4.13</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<name>启动器</name>
@@ -39,17 +39,20 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Spring Cloud -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>2021.0.3</version>
+				<version>2020.0.5</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- Spring Cloud Alibaba -->
 			<dependency>
 				<groupId>com.alibaba.cloud</groupId>
 				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
-				<version>2.2.7.RELEASE</version>
+				<version>2021.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -65,6 +68,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -191,5 +200,9 @@
 	</profiles>
 	<modules>
 		<module>starter-dependencies</module>
+		<module>spring-boot-starter-apollo-client</module>
+		<module>starter-web</module>
+		<module>starter-mybatis</module>
+		<module>starter-jdbc</module>
 	</modules>
 </project>

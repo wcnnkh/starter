@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>run.soeasy</groupId>
+		<artifactId>starter</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>starter-jdbc</artifactId>
+	<name>jdbc操作</name>
+	<description>为操作jdbc的项目快速开始</description>
+	<dependencies>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shardingsphere</groupId>
+			<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+			<version>5.1.1</version> <!-- 兼容 Spring Boot 2.4.x -->
+		</dependency>
+	</dependencies>
+</project>

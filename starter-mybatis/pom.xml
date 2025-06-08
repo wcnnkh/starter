@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>run.soeasy</groupId>
+		<artifactId>starter</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>starter-mybatis</artifactId>
+	<name>集成mybatis</name>
+	<description>使用mybatis操作数据库，集成mybatis相关组件用于快速开始</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.4.3.4</version> <!-- 兼容Spring Boot 2.4.x -->
+		</dependency>
+	</dependencies>
+</project>
