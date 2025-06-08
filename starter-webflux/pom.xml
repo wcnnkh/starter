@@ -5,20 +5,17 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	<artifactId>starter-jdbc</artifactId>
-	<name>jdbc操作</name>
-	<description>为操作jdbc的项目快速开始</description>
+	<artifactId>starter-webflux</artifactId>
+	<name>开始一个webflux项目</name>
+	<description>集成webflux环境</description>
 	<dependencies>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.shardingsphere</groupId>
-			<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
-			<version>5.1.1</version> <!-- 兼容 Spring Boot 2.4.x -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 	</dependencies>
 </project>
