@@ -6,7 +6,7 @@
 		<version>0.0.1</version>
 	</parent>
 	<artifactId>web-starter</artifactId>
-	<name>开始一个web项目</name>
+	<name>web-starter</name>
 	<description>集成常规web环境</description>
 	<dependencies>
 		<dependency>

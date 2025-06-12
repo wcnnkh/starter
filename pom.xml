@@ -2,6 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>run.soeasy.starter</groupId>
 	<artifactId>starter</artifactId>
+	<!-- generateBackupPoms 是否备份旧的pom.xml -->
+	<!-- newVersion 新的版本号 -->
+	<!-- mvn versions:set -DnewVersion=0.0.1 -DgenerateBackupPoms=false -->
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
 	<parent>
@@ -10,7 +13,7 @@
 		<version>2.4.13</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<name>启动器</name>
+	<name>starter</name>
 	<description>快速开始项目</description>
 	<url>https://github.com/wcnnkh/${project.name}</url>
 	<licenses>
@@ -38,6 +41,8 @@
 	</scm>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
 		<run.soeasy.framework.version>0.0.1</run.soeasy.framework.version>
 		<run.soeasy.starter.version>0.0.1</run.soeasy.starter.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
@@ -166,11 +171,6 @@
 					<target>${java.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
