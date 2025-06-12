@@ -6,7 +6,7 @@
 		<version>0.0.1</version>
 	</parent>
 	<artifactId>jdbc-starter</artifactId>
-	<name>jdbc操作</name>
+	<name>jdbc-starter</name>
 	<description>集成所以主流jdbc并保证兼容，如果想保持maven依赖整洁则不应该引入此jar(单独引用但无需管理依赖)</description>
 	<dependencies>
 		<dependency>
