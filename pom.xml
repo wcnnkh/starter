@@ -37,13 +37,47 @@
 		<url>https://github.com/wcnnkh/${project.name}.git</url>
 	</scm>
 
+	<properties>
+		<run.soeasy.framework.version>0.0.1</run.soeasy.framework.version>
+		<run.soeasy.starter.version>0.0.1</run.soeasy.starter.version>
+		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
+		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
+		<mybatis.spring.boot.starter.version>2.3.1</mybatis.spring.boot.starter.version>
+		<mybatis.plus.boot.starter.version>3.4.3.4</mybatis.plus.boot.starter.version>
+		<springfox.version>2.9.2</springfox.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<!-- Swagger 2 依赖 -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${springfox.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${springfox.version}</version>
+			</dependency>
+
+			<!-- mybatis -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${mybatis.spring.boot.starter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis.plus.boot.starter.version}</version> <!-- 兼容Spring Boot 2.4.x -->
+			</dependency>
+
 			<!-- Spring Cloud -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>2020.0.5</version>
+				<version>${spring.cloud.dependencies.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -52,30 +86,25 @@
 			<dependency>
 				<groupId>com.alibaba.cloud</groupId>
 				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
-				<version>2021.1</version>
+				<version>${spring.cloud.alibaba.dependencies.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>starter-web</artifactId>
-				<version>0.0.1</version>
+				<artifactId>jdbc-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>starter-jdbc</artifactId>
-				<version>0.0.1</version>
+				<artifactId>web-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>starter-mybatis</artifactId>
-				<version>0.0.1</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>starter-webflux</artifactId>
-				<version>0.0.1</version>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>core</artifactId>
+				<version>${run.soeasy.framework.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -83,7 +112,6 @@
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,7 +125,6 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -220,9 +247,7 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>starter-webflux</module>
-		<module>starter-web</module>
-		<module>starter-mybatis</module>
-		<module>starter-jdbc</module>
+		<module>jdbc-starter</module>
+		<module>web-starter</module>
 	</modules>
 </project>

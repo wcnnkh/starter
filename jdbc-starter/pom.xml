@@ -5,9 +5,9 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	<artifactId>starter-jdbc</artifactId>
+	<artifactId>jdbc-starter</artifactId>
 	<name>jdbc操作</name>
-	<description>为操作jdbc的项目快速开始</description>
+	<description>集成所以主流jdbc并保证兼容，如果想保持maven依赖整洁则不应该引入此jar(单独引用但无需管理依赖)</description>
 	<dependencies>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -19,6 +19,16 @@
 			<groupId>org.apache.shardingsphere</groupId>
 			<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
 			<version>5.1.1</version> <!-- 兼容 Spring Boot 2.4.x -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
 </project>

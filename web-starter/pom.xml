@@ -5,17 +5,33 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	<artifactId>starter-webflux</artifactId>
-	<name>开始一个webflux项目</name>
-	<description>集成webflux环境</description>
+	<artifactId>web-starter</artifactId>
+	<name>开始一个web项目</name>
+	<description>集成常规web环境</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- Spring WebFlux -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+		</dependency>
+		<!-- Spring WebSocket 依赖 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<!-- Swagger 2 依赖 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
 	</dependencies>
 </project>
