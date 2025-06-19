@@ -111,6 +111,11 @@
 				<artifactId>core</artifactId>
 				<version>${run.soeasy.framework.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>jdbc</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
