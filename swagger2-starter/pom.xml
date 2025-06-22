@@ -5,25 +5,8 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.2</version>
 	</parent>
-	<artifactId>web-starter</artifactId>
-	<name>web-starter</name>
-	<description>集成常规web环境</description>
+	<artifactId>swagger2-starter</artifactId>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- Spring WebFlux -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webflux</artifactId>
-		</dependency>
-		<!-- Spring WebSocket 依赖 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-
 		<!-- Swagger 2 依赖 -->
 		<dependency>
 			<groupId>io.springfox</groupId>

@@ -5,26 +5,15 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.2</version>
 	</parent>
-	<artifactId>jdbc-starter</artifactId>
-	<name>jdbc-starter</name>
-	<description>集成主流jdbc并保证兼容，如果想保持maven依赖整洁应该单独选择依赖</description>
+	<artifactId>common-starter</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-json</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -50,9 +50,16 @@
 		<mybatis.spring.boot.starter.version>2.3.1</mybatis.spring.boot.starter.version>
 		<mybatis.plus.boot.starter.version>3.4.3.4</mybatis.plus.boot.starter.version>
 		<springfox.version>2.9.2</springfox.version>
+		<shardingsphere.jdbc.version>5.1.1</shardingsphere.jdbc.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.apache.shardingsphere</groupId>
+				<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+				<version>${shardingsphere.jdbc.version}</version>
+			</dependency>
+
 			<!-- Swagger 2 依赖 -->
 			<dependency>
 				<groupId>io.springfox</groupId>
@@ -95,17 +102,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>jdbc-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>web-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
+			<!--           framework          -->
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
 				<artifactId>core</artifactId>
@@ -113,8 +110,79 @@
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
+				<artifactId>aop</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>beans</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>dom</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>json</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
 				<artifactId>jdbc</artifactId>
 				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>messaging</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>slf4j</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>xml</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<!-- starter  -->
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>jdbc-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>login-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>mybatis-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>payment-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>shardingsphere-jdbc-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>swagger2-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>common-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -124,15 +192,19 @@
 			<artifactId>core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-			<scope>provided</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
@@ -254,5 +326,13 @@
 	<modules>
 		<module>jdbc-starter</module>
 		<module>web-starter</module>
+		<module>payment-starter</module>
+		<module>login-starter</module>
+		<module>swagger2-starter</module>
+		<module>mybatis-starter</module>
+		<module>shardingsphere-jdbc-starter</module>
+		<module>common-starter</module>
+		<module>verification-code-starter</module>
+		<module>captcha-starter</module>
 	</modules>
 </project>
