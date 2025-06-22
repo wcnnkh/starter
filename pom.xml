@@ -51,9 +51,16 @@
 		<mybatis.plus.boot.starter.version>3.4.3.4</mybatis.plus.boot.starter.version>
 		<springfox.version>2.9.2</springfox.version>
 		<shardingsphere.jdbc.version>5.1.1</shardingsphere.jdbc.version>
+		<guava.version>32.1.2-jre</guava.version> <!-- 针对JRE环境的版本 -->
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+				<optional>true</optional>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.shardingsphere</groupId>
 				<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
@@ -152,11 +159,6 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jdbc-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>login-starter</artifactId>
 				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 			<dependency>
@@ -324,15 +326,12 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>jdbc-starter</module>
-		<module>web-starter</module>
-		<module>payment-starter</module>
-		<module>login-starter</module>
-		<module>swagger2-starter</module>
-		<module>mybatis-starter</module>
-		<module>shardingsphere-jdbc-starter</module>
-		<module>common-starter</module>
-		<module>verification-code-starter</module>
 		<module>captcha-starter</module>
+		<module>common-starter</module>
+		<module>jdbc-starter</module>
+		<module>mybatis-starter</module>
+		<module>payment-starter</module>
+		<module>shardingsphere-jdbc-starter</module>
+		<module>swagger2-starter</module>
 	</modules>
 </project>
