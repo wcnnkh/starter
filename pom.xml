@@ -52,14 +52,38 @@
 		<springfox.version>2.9.2</springfox.version>
 		<shardingsphere.jdbc.version>5.1.1</shardingsphere.jdbc.version>
 		<guava.version>32.1.2-jre</guava.version> <!-- 针对JRE环境的版本 -->
+		<bouncycastle.version>1.70</bouncycastle.version>
+		<apache.commons.net.version>3.8.0</apache.commons.net.version>
+		<swagger3.version>2.2.15</swagger3.version>
+		<commons-io.version>2.19.0</commons-io.version>
+		<wechatpay-java.version>0.2.17</wechatpay-java.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>com.github.wechatpay-apiv3</groupId>
+				<artifactId>wechatpay-java</artifactId>
+				<version>${wechatpay-java.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>${bouncycastle.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
-				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.shardingsphere</groupId>
@@ -158,6 +182,11 @@
 			<!-- starter  -->
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
+				<artifactId>commons-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jdbc-starter</artifactId>
 				<version>${run.soeasy.starter.version}</version>
 			</dependency>
@@ -173,17 +202,17 @@
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
+				<artifactId>security-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
 				<artifactId>shardingsphere-jdbc-starter</artifactId>
 				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>swagger2-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>common-starter</artifactId>
 				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 		</dependencies>
@@ -326,12 +355,12 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>captcha-starter</module>
-		<module>common-starter</module>
+		<module>commons-starter</module>
 		<module>jdbc-starter</module>
 		<module>mybatis-starter</module>
 		<module>payment-starter</module>
 		<module>shardingsphere-jdbc-starter</module>
 		<module>swagger2-starter</module>
+		<module>security-starter</module>
 	</modules>
 </project>

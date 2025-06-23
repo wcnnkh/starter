@@ -2,12 +2,10 @@ package run.soeasy.starter.payment.apple;
 
 import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-
 import lombok.Getter;
 import lombok.Setter;
-import run.soeasy.starter.common.json.JacksonFormat;
-import run.soeasy.starter.common.web.HttpClient;
+import run.soeasy.starter.commons.json.JacksonFormat;
+import run.soeasy.starter.commons.web.HttpClient;
 
 /**
  * <a href=
@@ -24,9 +22,7 @@ public class ApplePay {
 	private static HttpClient httpClient = new HttpClient();
 
 	static {
-		JacksonFormat jacksonFormat = new JacksonFormat();
-		jacksonFormat.getJsonMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		httpClient.setJsonFormat(jacksonFormat);
+		httpClient.setJsonFormat(JacksonFormat.SNAKE_CASE);
 	}
 	/**
 	 * 应用程序的共享机密（十六进制字符串）。仅对包含自动续订的收据使用此字段。
@@ -34,8 +30,8 @@ public class ApplePay {
 	private String password;
 
 	public VerifyReceiptResponse verifyReceipt(String host, VerifyReceiptRequest request) {
-		ResponseEntity<VerifyReceiptResponse> response = httpClient.postJson(host, null, request,
-				VerifyReceiptResponse.class);
+		ResponseEntity<VerifyReceiptResponse> response = httpClient.postJson(host, null, request, String.class)
+				.toJSON(VerifyReceiptResponse.class);
 		VerifyReceiptResponse verifyReceiptResponse = response.getBody();
 		if (verifyReceiptResponse.isUseRetryable() && verifyReceiptResponse.isRetryable()) {
 			return verifyReceipt(host, request);

@@ -6,6 +6,8 @@
 		<version>0.0.2</version>
 	</parent>
 	<artifactId>mybatis-starter</artifactId>
+	<name>mybatis-starter</name>
+	<description>mybatis相关</description>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>

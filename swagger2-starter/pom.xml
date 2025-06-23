@@ -6,8 +6,9 @@
 		<version>0.0.2</version>
 	</parent>
 	<artifactId>swagger2-starter</artifactId>
+	<name>swagger2-starter</name>
+	<description>集成swagger2</description>
 	<dependencies>
-		<!-- Swagger 2 依赖 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>

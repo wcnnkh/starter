@@ -6,6 +6,8 @@
 		<version>0.0.2</version>
 	</parent>
 	<artifactId>shardingsphere-jdbc-starter</artifactId>
+	<name>shardingsphere-jdbc-starter</name>
+	<description>shardingsphere-jdbc相关，如分库分表</description>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
