@@ -2,8 +2,6 @@ package run.soeasy.starter.commons.json;
 
 import java.lang.reflect.Type;
 
-import org.springframework.boot.json.JsonParseException;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -72,7 +70,7 @@ public class JacksonFormat extends JsonMapper implements JsonFormat {
 			return readValue(json,
 					type instanceof JavaType ? ((JavaType) type) : TypeFactory.defaultInstance().constructType(type));
 		} catch (JsonProcessingException e) {
-			throw new JsonParseException(e);
+			throw new ConversionException(e);
 		}
 	}
 }

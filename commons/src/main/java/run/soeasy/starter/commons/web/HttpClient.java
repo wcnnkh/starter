@@ -15,7 +15,6 @@ import java.util.UUID;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.http.ssl.SSLContexts;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -44,7 +43,7 @@ import run.soeasy.starter.commons.json.JsonFormat;
 @Getter
 @Setter
 @Slf4j
-public class HttpClient extends RestTemplate implements ResourceLoaderAware {
+public class HttpClient extends RestTemplate {
 	private static final TypeDescriptor GET_PARAMETER_MAP_TYPE = TypeDescriptor.map(LinkedHashMap.class, String.class,
 			Object.class);
 
@@ -139,7 +138,7 @@ public class HttpClient extends RestTemplate implements ResourceLoaderAware {
 			}
 		} catch (KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException
 				| CertificateException | IOException e) {
-			log.error(keyMaterialResource.getDescription(), e);
+			logger.error(keyMaterialResource.getDescription(), e);
 			return;
 		}
 		setSSLSocketFactory(sslSocketFactory);

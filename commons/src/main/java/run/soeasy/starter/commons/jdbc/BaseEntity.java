@@ -1,4 +1,4 @@
-package run.soeasy.starter.jdbc.entity;
+package run.soeasy.starter.commons.jdbc;
 
 import java.io.Serializable;
 

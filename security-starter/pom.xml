@@ -10,6 +10,10 @@
 	<description>安全相关，如授权与认证</description>
 	<dependencies>
 		<dependency>
+			<groupId>run.soeasy.starter</groupId>
+			<artifactId>commons</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 		</dependency>
