@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.1 -DgenerateBackupPoms=false -->
-	<version>0.0.1</version>
+	<!-- mvn versions:set -DnewVersion=0.0.2 -DgenerateBackupPoms=false -->
+	<version>0.0.2</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,16 +43,54 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.framework.version>0.0.1</run.soeasy.framework.version>
-		<run.soeasy.starter.version>0.0.1</run.soeasy.starter.version>
+		<run.soeasy.starter.version>0.0.2</run.soeasy.starter.version>
+		<run.soeasy.framework.version>0.0.3</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis.spring.boot.starter.version>2.3.1</mybatis.spring.boot.starter.version>
 		<mybatis.plus.boot.starter.version>3.4.3.4</mybatis.plus.boot.starter.version>
 		<springfox.version>2.9.2</springfox.version>
+		<shardingsphere.jdbc.version>5.1.1</shardingsphere.jdbc.version>
+		<guava.version>32.1.2-jre</guava.version> <!-- 针对JRE环境的版本 -->
+		<bouncycastle.version>1.70</bouncycastle.version>
+		<apache.commons.net.version>3.8.0</apache.commons.net.version>
+		<swagger3.version>2.2.15</swagger3.version>
+		<commons-io.version>2.19.0</commons-io.version>
+		<wechatpay-java.version>0.2.17</wechatpay-java.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.github.wechatpay-apiv3</groupId>
+				<artifactId>wechatpay-java</artifactId>
+				<version>${wechatpay-java.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>${bouncycastle.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shardingsphere</groupId>
+				<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+				<version>${shardingsphere.jdbc.version}</version>
+			</dependency>
+
 			<!-- Swagger 2 依赖 -->
 			<dependency>
 				<groupId>io.springfox</groupId>
@@ -95,39 +133,122 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>jdbc-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>web-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
-			</dependency>
+			<!--           framework          -->
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
 				<artifactId>core</artifactId>
 				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>aop</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>beans</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>dom</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>json</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>jdbc</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>messaging</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>slf4j</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>xml</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
+			<!-- starter  -->
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>commons</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>payment-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>security-starter</artifactId>
+				<version>${run.soeasy.starter.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
+			<artifactId>aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
 			<artifactId>core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>dom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>messaging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -247,7 +368,8 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>jdbc-starter</module>
-		<module>web-starter</module>
+		<module>commons</module>
+		<module>payment-starter</module>
+		<module>security-starter</module>
 	</modules>
 </project>
