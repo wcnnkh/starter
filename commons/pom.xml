@@ -6,6 +6,8 @@
 		<version>0.0.2</version>
 	</parent>
 	<artifactId>commons</artifactId>
+	<name>commons</name>
+	<description>公共模块</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>

@@ -10,14 +10,14 @@ import lombok.NonNull;
 import lombok.Setter;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.convert.TypeDescriptor;
-import run.soeasy.starter.commons.json.JacksonFormat;
-import run.soeasy.starter.commons.json.JsonFormat;
+import run.soeasy.framework.json.JsonConverter;
+import run.soeasy.starter.commons.json.JacksonConverter;
 
 @Getter
 @Setter
 public class HttpResponseEntity<T> extends ResponseEntity<T> {
 	@NonNull
-	private JsonFormat jsonFormat = JacksonFormat.DEFAULT;
+	private JsonConverter jsonFormat = JacksonConverter.DEFAULT;
 
 	public HttpResponseEntity(ResponseEntity<T> responseEntity) {
 		this(responseEntity.getBody(), responseEntity.getHeaders(), responseEntity.getStatusCodeValue());

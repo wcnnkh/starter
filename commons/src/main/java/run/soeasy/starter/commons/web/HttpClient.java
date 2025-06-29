@@ -2,6 +2,7 @@ package run.soeasy.starter.commons.web;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -9,7 +10,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -24,8 +24,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,20 +35,22 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.convert.TypeDescriptor;
-import run.soeasy.starter.commons.json.JacksonFormat;
-import run.soeasy.starter.commons.json.JsonFormat;
+import run.soeasy.framework.json.JsonConverter;
+import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
+import run.soeasy.starter.commons.json.JacksonConverter;
 
 @Getter
 @Setter
 @Slf4j
 public class HttpClient extends RestTemplate {
-	private static final TypeDescriptor GET_PARAMETER_MAP_TYPE = TypeDescriptor.map(LinkedHashMap.class, String.class,
+	private static final TypeDescriptor GET_PARAMETER_MAP_TYPE = TypeDescriptor.map(LinkedHashMap.class, Object.class,
 			Object.class);
-
 	@NonNull
-	private JsonFormat jsonFormat = JacksonFormat.DEFAULT;
+	private JsonConverter jsonFormat = JacksonConverter.DEFAULT;
 	@NonNull
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();
+	@NonNull
+	private QueryStringFormat queryStringFormat = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
 
 	/**
 	 * 扩展exchange
@@ -67,18 +67,12 @@ public class HttpClient extends RestTemplate {
 	@SuppressWarnings("unchecked")
 	public <T> HttpResponseEntity<T> exchange(@NonNull String url, @NonNull HttpMethod httpMethod, HttpHeaders headers,
 			Object content, @NonNull Converter requestConverter, @NonNull Type responseType) {
-		if (httpMethod == HttpMethod.GET && content != null
-				&& requestConverter.canConvert(TypeDescriptor.forObject(content), GET_PARAMETER_MAP_TYPE)) {
-			Map<String, String> uriVariables = (Map<String, String>) requestConverter.convert(content,
-					GET_PARAMETER_MAP_TYPE);
-			MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-			if (uriVariables != null) {
-				for (Entry<String, String> entry : uriVariables.entrySet()) {
-					multiValueMap.set(entry.getKey(), entry.getValue());
-				}
-			}
-
-			url = UriComponentsBuilder.fromUriString(url).queryParams(multiValueMap).build().toUriString();
+		if (httpMethod == HttpMethod.GET && content != null && (content instanceof Map
+				|| requestConverter.canConvert(TypeDescriptor.forObject(content), GET_PARAMETER_MAP_TYPE))) {
+			Map<Object, Object> uriVariables = content instanceof Map ? ((Map<Object, Object>) content)
+					: ((Map<Object, Object>) requestConverter.convert(content, GET_PARAMETER_MAP_TYPE));
+			String queryString = queryStringFormat.convert(uriVariables, String.class);
+			url = UriComponentsBuilder.fromUriString(url).query(queryString).build().toUriString();
 			content = null;
 		}
 
@@ -118,7 +112,7 @@ public class HttpClient extends RestTemplate {
 	}
 
 	public final <T> HttpResponseEntity<T> getJson(String url, HttpHeaders headers, Object request, Type responseType,
-			@NonNull JsonFormat jsonFormat) {
+			@NonNull JsonConverter jsonFormat) {
 		HttpResponseEntity<T> responseEntity = exchange(url, HttpMethod.GET, headers, request, jsonFormat,
 				responseType);
 		responseEntity.setJsonFormat(jsonFormat);
@@ -158,11 +152,15 @@ public class HttpClient extends RestTemplate {
 	}
 
 	public final <T> HttpResponseEntity<T> postJson(@NonNull String url, HttpHeaders headers, Object content,
-			@NonNull Type responseType, @NonNull JsonFormat jsonFormat) {
+			@NonNull Type responseType, @NonNull JsonConverter jsonFormat) {
 		if (headers == null) {
 			headers = new HttpHeaders();
 		}
-		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		if (!MediaType.APPLICATION_JSON.isCompatibleWith(headers.getContentType())) {
+			headers.setContentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8));
+		}
+
 		if (content != null) {
 			content = jsonFormat.convert(content, String.class);
 		}
@@ -173,7 +171,7 @@ public class HttpClient extends RestTemplate {
 	}
 
 	public void setPropertyNamingStrategy(PropertyNamingStrategy propertyNamingStrategy) {
-		JacksonFormat jacksonFormat = JacksonFormat.DEFAULT.copy();
+		JacksonConverter jacksonFormat = JacksonConverter.DEFAULT.copy();
 		jacksonFormat.setPropertyNamingStrategy(propertyNamingStrategy);
 		setJsonFormat(jacksonFormat);
 	}

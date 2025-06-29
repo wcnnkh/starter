@@ -29,7 +29,7 @@ public class QueryStringUtils {
 				for (Object element : iterable) {
 					append(builder, key, element, valueEncoder);
 				}
-			} else if (value != null && value.getClass().isArray()) {
+			} else if (value.getClass().isArray()) {
 				for (int i = 0, length = Array.getLength(value); i < length; i++) {
 					append(builder, key, Array.get(value, i), valueEncoder);
 				}
