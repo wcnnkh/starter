@@ -52,20 +52,8 @@ public class HttpClient extends RestTemplate {
 	@NonNull
 	private QueryStringFormat queryStringFormat = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
 
-	/**
-	 * 扩展exchange
-	 * 
-	 * @param <T>
-	 * @param url
-	 * @param httpMethod
-	 * @param headers
-	 * @param content
-	 * @param requestConverter
-	 * @param responseType
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
-	public <T> HttpResponseEntity<T> exchange(@NonNull String url, @NonNull HttpMethod httpMethod, HttpHeaders headers,
+	public <T> HttpResponseEntity<T> request(@NonNull String url, @NonNull HttpMethod httpMethod, HttpHeaders headers,
 			Object content, @NonNull Converter requestConverter, @NonNull Type responseType) {
 		if (httpMethod == HttpMethod.GET && content != null && (content instanceof Map
 				|| requestConverter.canConvert(TypeDescriptor.forObject(content), GET_PARAMETER_MAP_TYPE))) {
@@ -91,20 +79,9 @@ public class HttpClient extends RestTemplate {
 		return httpResponseEntity;
 	}
 
-	/**
-	 * 扩展exchange
-	 * 
-	 * @param <T>
-	 * @param url
-	 * @param httpMethod
-	 * @param headers
-	 * @param content
-	 * @param responseType
-	 * @return
-	 */
-	public final <T> HttpResponseEntity<T> exchange(@NonNull String url, @NonNull HttpMethod httpMethod,
+	public final <T> HttpResponseEntity<T> request(@NonNull String url, @NonNull HttpMethod httpMethod,
 			HttpHeaders headers, Object content, @NonNull Type responseType) {
-		return exchange(url, httpMethod, headers, content, this.jsonFormat, responseType);
+		return request(url, httpMethod, headers, content, this.jsonFormat, responseType);
 	}
 
 	public final <T> HttpResponseEntity<T> getJson(String uri, HttpHeaders headers, Object request, Type responseType) {
@@ -113,14 +90,17 @@ public class HttpClient extends RestTemplate {
 
 	public final <T> HttpResponseEntity<T> getJson(String url, HttpHeaders headers, Object request, Type responseType,
 			@NonNull JsonConverter jsonFormat) {
-		HttpResponseEntity<T> responseEntity = exchange(url, HttpMethod.GET, headers, request, jsonFormat,
-				responseType);
+		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.GET, headers, request, jsonFormat, responseType);
 		responseEntity.setJsonFormat(jsonFormat);
 		return responseEntity;
 	}
 
 	public void loadKeyMaterial(@NonNull Resource keyMaterialResource, @NonNull String storePassword,
 			@NonNull String keyPassword) {
+		if (keyMaterialResource == null || !keyMaterialResource.exists()) {
+			throw new IllegalArgumentException("Key material resource not found: " + keyMaterialResource);
+		}
+		
 		SSLSocketFactory sslSocketFactory;
 		try {
 			if (keyMaterialResource.isFile()) {
@@ -141,9 +121,7 @@ public class HttpClient extends RestTemplate {
 	public void loadKeyMaterial(@NonNull String KeyMaterialLocation, @NonNull String storePassword,
 			@NonNull String keyPassword) {
 		Resource resource = resourceLoader.getResource(KeyMaterialLocation);
-		if (resource != null && resource.exists()) {
-			loadKeyMaterial(resource, storePassword, keyPassword);
-		}
+		loadKeyMaterial(resource, storePassword, keyPassword);
 	}
 
 	public final <T> HttpResponseEntity<T> postJson(@NonNull String url, HttpHeaders headers, Object content,
@@ -164,7 +142,7 @@ public class HttpClient extends RestTemplate {
 		if (content != null) {
 			content = jsonFormat.convert(content, String.class);
 		}
-		HttpResponseEntity<T> responseEntity = exchange(url, HttpMethod.POST, headers, content, jsonFormat,
+		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.POST, headers, content, jsonFormat,
 				responseType);
 		responseEntity.setJsonFormat(jsonFormat);
 		return responseEntity;

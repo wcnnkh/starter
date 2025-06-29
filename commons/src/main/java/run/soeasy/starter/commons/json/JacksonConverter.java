@@ -23,29 +23,31 @@ public class JacksonConverter extends JsonMapper implements JsonConverter {
 	 * 默认的
 	 */
 	public static final JacksonConverter DEFAULT = new JacksonConverter();
-	static {
-		DEFAULT.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 忽略未知属性
-		DEFAULT.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		DEFAULT.configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, true);
-		DEFAULT.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-		DEFAULT.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		DEFAULT.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-	}
-
 	/**
 	 * 下划线命名方式
 	 */
 	public static final JacksonConverter SNAKE_CASE = new JacksonConverter();
+	
 	static {
 		SNAKE_CASE.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 	}
 
 	public JacksonConverter() {
 		super();
+		afterProperties();
 	}
 
 	public JacksonConverter(JsonMapper jsonMapper) {
 		super(jsonMapper);
+	}
+	
+	public void afterProperties() {
+		configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 忽略未知属性
+		setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, true);
+		configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 	}
 
 	@Override
