@@ -1,11 +1,11 @@
-package run.soeasy.starter.commons.math;
+package run.soeasy.starter.commons;
 
 import java.util.Random;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class RandomUtils {
+public class CommonUtils {
 	public final static String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	public final static String LOWERCASE_LETTERS = CAPITAL_LETTERS.toLowerCase();

@@ -11,13 +11,13 @@ import lombok.Setter;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.convert.TypeDescriptor;
 import run.soeasy.framework.json.JsonConverter;
-import run.soeasy.starter.commons.json.JacksonConverter;
+import run.soeasy.starter.commons.jackson.JsonFormat;
 
 @Getter
 @Setter
 public class HttpResponseEntity<T> extends ResponseEntity<T> {
 	@NonNull
-	private JsonConverter jsonFormat = JacksonConverter.DEFAULT;
+	private JsonConverter jsonConverter = JsonFormat.DEFAULT;
 
 	public HttpResponseEntity(ResponseEntity<T> responseEntity) {
 		this(responseEntity.getBody(), responseEntity.getHeaders(), responseEntity.getStatusCodeValue());
@@ -34,7 +34,7 @@ public class HttpResponseEntity<T> extends ResponseEntity<T> {
 		}
 		HttpResponseEntity<R> response = new HttpResponseEntity<>(mapper.apply(getBody()), getHeaders(),
 				getStatusCodeValue());
-		response.jsonFormat = this.jsonFormat;
+		response.jsonConverter = this.jsonConverter;
 		return response;
 	}
 
@@ -48,10 +48,10 @@ public class HttpResponseEntity<T> extends ResponseEntity<T> {
 	}
 
 	public <R> HttpResponseEntity<R> toJSON(Class<R> bodyClass) {
-		return map(bodyClass, jsonFormat);
+		return map(bodyClass, jsonConverter);
 	}
 
 	public <R> HttpResponseEntity<R> toJSON(TypeDescriptor bodyTypeDescriptor) {
-		return map(bodyTypeDescriptor, jsonFormat);
+		return map(bodyTypeDescriptor, jsonConverter);
 	}
 }

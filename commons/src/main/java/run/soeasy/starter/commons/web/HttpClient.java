@@ -27,8 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -37,21 +35,51 @@ import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.convert.TypeDescriptor;
 import run.soeasy.framework.json.JsonConverter;
 import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
-import run.soeasy.starter.commons.json.JacksonConverter;
+import run.soeasy.starter.commons.jackson.JsonFormat;
 
+/**
+ * HTTP客户端工具类<br>
+ * 封装{@link RestTemplate}实现RESTful API请求，支持JSON参数序列化、URL参数拼接、SSL证书加载等功能
+ * 
+ * @author soeasy.run
+ */
 @Getter
 @Setter
 @Slf4j
 public class HttpClient extends RestTemplate {
 	private static final TypeDescriptor GET_PARAMETER_MAP_TYPE = TypeDescriptor.map(LinkedHashMap.class, Object.class,
 			Object.class);
+	private static final MediaType DEFAULT_JSON_MEDIA_TYPE = new MediaType(MediaType.APPLICATION_JSON,
+			StandardCharsets.UTF_8);
+
+	/** JSON转换器，默认使用{@link JsonFormat#DEFAULT} */
 	@NonNull
-	private JsonConverter jsonFormat = JacksonConverter.DEFAULT;
+	private JsonConverter jsonConverter = JsonFormat.DEFAULT;
+	
+	/** 资源加载器，默认使用{@link DefaultResourceLoader} */
 	@NonNull
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();
+	
+	/** URL查询参数格式化器 */
 	@NonNull
 	private QueryStringFormat queryStringFormat = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
+	
+	/** JSON媒体类型，默认使用UTF-8编码的APPLICATION_JSON */
+	@NonNull
+	private MediaType jsonMediaType = DEFAULT_JSON_MEDIA_TYPE;
 
+	/**
+	 * 执行HTTP请求
+	 * 
+	 * @param url 请求URL
+	 * @param httpMethod HTTP方法（GET/POST等）
+	 * @param headers 请求头
+	 * @param content 请求体内容
+	 * @param requestConverter 请求参数转换器
+	 * @param responseType 响应类型
+	 * @return 封装的HTTP响应实体
+	 * @throws IllegalArgumentException 当参数不合法时抛出
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> HttpResponseEntity<T> request(@NonNull String url, @NonNull HttpMethod httpMethod, HttpHeaders headers,
 			Object content, @NonNull Converter requestConverter, @NonNull Type responseType) {
@@ -75,32 +103,70 @@ public class HttpClient extends RestTemplate {
 		});
 		log.info("[{}] {} {} request entity {}", uuid, httpMethod, url, responseEntity);
 		HttpResponseEntity<T> httpResponseEntity = new HttpResponseEntity<>(responseEntity);
-		httpResponseEntity.setJsonFormat(jsonFormat);
+		httpResponseEntity.setJsonConverter(jsonConverter);
 		return httpResponseEntity;
 	}
 
+	/**
+	 * 使用默认JSON转换器执行HTTP请求
+	 * 
+	 * @param url 请求URL
+	 * @param httpMethod HTTP方法
+	 * @param headers 请求头
+	 * @param content 请求体
+	 * @param responseType 响应类型
+	 * @return 封装的HTTP响应实体
+	 */
 	public final <T> HttpResponseEntity<T> request(@NonNull String url, @NonNull HttpMethod httpMethod,
 			HttpHeaders headers, Object content, @NonNull Type responseType) {
-		return request(url, httpMethod, headers, content, this.jsonFormat, responseType);
+		return request(url, httpMethod, headers, content, this.jsonConverter, responseType);
 	}
 
+	/**
+	 * 执行GET请求并解析JSON响应
+	 * 
+	 * @param uri 请求URI
+	 * @param headers 请求头
+	 * @param request 请求参数
+	 * @param responseType 响应类型
+	 * @return 封装的HTTP响应实体
+	 */
 	public final <T> HttpResponseEntity<T> getJson(String uri, HttpHeaders headers, Object request, Type responseType) {
-		return getJson(uri, headers, request, responseType, this.jsonFormat);
+		return getJson(uri, headers, request, responseType, this.jsonConverter);
 	}
 
+	/**
+	 * 执行GET请求并解析JSON响应（指定JSON转换器）
+	 * 
+	 * @param url 请求URL
+	 * @param headers 请求头
+	 * @param request 请求参数
+	 * @param responseType 响应类型
+	 * @param jsonConverter JSON转换器
+	 * @return 封装的HTTP响应实体
+	 */
 	public final <T> HttpResponseEntity<T> getJson(String url, HttpHeaders headers, Object request, Type responseType,
-			@NonNull JsonConverter jsonFormat) {
-		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.GET, headers, request, jsonFormat, responseType);
-		responseEntity.setJsonFormat(jsonFormat);
+			@NonNull JsonConverter jsonConverter) {
+		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.GET, headers, request, jsonConverter,
+				responseType);
+		responseEntity.setJsonConverter(jsonConverter);
 		return responseEntity;
 	}
 
+	/**
+	 * 加载SSL密钥材料（.p12/.jks等格式）
+	 * 
+	 * @param keyMaterialResource 密钥材料资源
+	 * @param storePassword 密钥库密码
+	 * @param keyPassword 密钥密码
+	 * @throws IllegalArgumentException 当资源不存在时抛出
+	 */
 	public void loadKeyMaterial(@NonNull Resource keyMaterialResource, @NonNull String storePassword,
 			@NonNull String keyPassword) {
 		if (keyMaterialResource == null || !keyMaterialResource.exists()) {
 			throw new IllegalArgumentException("Key material resource not found: " + keyMaterialResource);
 		}
-		
+
 		SSLSocketFactory sslSocketFactory;
 		try {
 			if (keyMaterialResource.isFile()) {
@@ -118,42 +184,67 @@ public class HttpClient extends RestTemplate {
 		setSSLSocketFactory(sslSocketFactory);
 	}
 
-	public void loadKeyMaterial(@NonNull String KeyMaterialLocation, @NonNull String storePassword,
+	/**
+	 * 通过资源路径加载SSL密钥材料
+	 * 
+	 * @param keyMaterialLocation 密钥材料路径（支持classpath:/、file:等前缀）
+	 * @param storePassword 密钥库密码
+	 * @param keyPassword 密钥密码
+	 */
+	public void loadKeyMaterial(@NonNull String keyMaterialLocation, @NonNull String storePassword,
 			@NonNull String keyPassword) {
-		Resource resource = resourceLoader.getResource(KeyMaterialLocation);
+		Resource resource = resourceLoader.getResource(keyMaterialLocation);
 		loadKeyMaterial(resource, storePassword, keyPassword);
 	}
 
+	/**
+	 * 执行POST请求并发送JSON参数
+	 * 
+	 * @param url 请求URL
+	 * @param headers 请求头
+	 * @param content 请求JSON内容
+	 * @param responseType 响应类型
+	 * @return 封装的HTTP响应实体
+	 */
 	public final <T> HttpResponseEntity<T> postJson(@NonNull String url, HttpHeaders headers, Object content,
 			@NonNull Type responseType) {
-		return postJson(url, headers, content, responseType, this.jsonFormat);
+		return postJson(url, headers, content, responseType, this.jsonConverter);
 	}
 
+	/**
+	 * 执行POST请求并发送JSON参数（指定JSON转换器）
+	 * 
+	 * @param url 请求URL
+	 * @param headers 请求头
+	 * @param content 请求JSON内容
+	 * @param responseType 响应类型
+	 * @param jsonConverter JSON转换器
+	 * @return 封装的HTTP响应实体
+	 */
 	public final <T> HttpResponseEntity<T> postJson(@NonNull String url, HttpHeaders headers, Object content,
-			@NonNull Type responseType, @NonNull JsonConverter jsonFormat) {
+			@NonNull Type responseType, @NonNull JsonConverter jsonConverter) {
 		if (headers == null) {
 			headers = new HttpHeaders();
 		}
 
 		if (!MediaType.APPLICATION_JSON.isCompatibleWith(headers.getContentType())) {
-			headers.setContentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8));
+			headers.setContentType(jsonMediaType);
 		}
 
 		if (content != null) {
-			content = jsonFormat.convert(content, String.class);
+			content = jsonConverter.convert(content, String.class);
 		}
-		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.POST, headers, content, jsonFormat,
+		HttpResponseEntity<T> responseEntity = request(url, HttpMethod.POST, headers, content, jsonConverter,
 				responseType);
-		responseEntity.setJsonFormat(jsonFormat);
+		responseEntity.setJsonConverter(jsonConverter);
 		return responseEntity;
 	}
 
-	public void setPropertyNamingStrategy(PropertyNamingStrategy propertyNamingStrategy) {
-		JacksonConverter jacksonFormat = JacksonConverter.DEFAULT.copy();
-		jacksonFormat.setPropertyNamingStrategy(propertyNamingStrategy);
-		setJsonFormat(jacksonFormat);
-	}
-
+	/**
+	 * 设置SSL套接字工厂
+	 * 
+	 * @param sslSocketFactory SSL套接字工厂
+	 */
 	public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
 		SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
 		httpsRequestFactory.setSslSocketFactory(sslSocketFactory);

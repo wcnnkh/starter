@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
-import run.soeasy.starter.commons.json.JacksonConverter;
+import run.soeasy.starter.commons.jackson.JsonFormat;
 import run.soeasy.starter.commons.web.HttpClient;
 
 /**
@@ -22,7 +22,7 @@ public class ApplePay {
 	private static HttpClient httpClient = new HttpClient();
 
 	static {
-		httpClient.setJsonFormat(JacksonConverter.SNAKE_CASE);
+		httpClient.setJsonConverter(JsonFormat.SNAKE_CASE);
 	}
 	/**
 	 * 应用程序的共享机密（十六进制字符串）。仅对包含自动续订的收据使用此字段。
