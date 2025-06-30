@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import run.soeasy.starter.commons.jackson.JsonFormat;
-import run.soeasy.starter.commons.web.HttpClient;
+import run.soeasy.starter.commons.web.HttpTemplate;
 
 /**
  * <a href=
@@ -19,7 +19,7 @@ import run.soeasy.starter.commons.web.HttpClient;
 public class ApplePay {
 	static final String SANDBOX_URL = "https://sandbox.itunes.apple.com/verifyReceipt";
 	static final String DEV_URL = "https://buy.itunes.apple.com/verifyReceipt";
-	private static HttpClient httpClient = new HttpClient();
+	private static HttpTemplate httpClient = new HttpTemplate();
 
 	static {
 		httpClient.setJsonConverter(JsonFormat.SNAKE_CASE);
