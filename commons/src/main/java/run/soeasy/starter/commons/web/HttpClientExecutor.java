@@ -41,7 +41,7 @@ import run.soeasy.starter.commons.jackson.JsonFormat;
  * 作为 HTTP 客户端的基础契约，提供：
  * <ul>
  * <li>标准化的请求-响应模型（基于 Spring HTTP 模型）</li>
- * <li>泛型类型安全的响应处理（支持复杂泛型如 List<User>）</li>
+ * <li>泛型类型安全的响应处理</li>
  * <li>默认实现的便捷方法（简化常见 HTTP 操作）</li>
  * <li>与 Spring 生态无缝集成（兼容 RestTemplate 扩展）</li>
  * </ul>
@@ -70,7 +70,7 @@ public interface HttpClientExecutor {
 	 * <ul>
 	 * <li>支持任意 HTTP 方法（GET/POST/PUT/DELETE 等）</li>
 	 * <li>通过 RequestEntity 封装完整请求（URL/方法/头/体）</li>
-	 * <li>通过 Type 参数支持复杂泛型响应类型（如 List<User>）</li>
+	 * <li>通过 Type 参数支持复杂泛型响应类型</li>
 	 * </ul>
 	 * 
 	 * <p>
@@ -117,7 +117,7 @@ public interface HttpClientExecutor {
 	 * @param headers          请求头（可为 null，自动补全基础头）
 	 * @param content          请求体内容（GET 请求时作为查询参数）
 	 * @param requestConverter 转换器（处理请求/响应体转换）
-	 * @param responseType     响应类型（支持泛型类型如 List<User>）
+	 * @param responseType     响应类型（支持泛型类型）
 	 * @return 增强型 HTTP 响应实体（封装 ResponseEntity）
 	 * @throws HttpClientException 当请求执行失败时抛出
 	 */
@@ -275,7 +275,7 @@ public interface HttpClientExecutor {
 	 * 用于将 Map 转换为 URL 查询字符串， 默认使用 UTF-8 编码，支持：
 	 * <ul>
 	 * <li>嵌套对象展开（如 {a:{b:c}} → a.b=c）</li>
-	 * <li>集合类型序列化（如 [a,b] → a&b）</li>
+	 * <li>集合类型序列化（如 [a,b] → a&amp;b）</li>
 	 * <li>特殊字符转义（如空格→%20）</li>
 	 * </ul>
 	 * 

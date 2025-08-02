@@ -5,8 +5,7 @@ import java.math.RoundingMode;
 
 import lombok.NonNull;
 import run.soeasy.framework.codec.Codec;
-import run.soeasy.framework.codec.DecodeException;
-import run.soeasy.framework.codec.EncodeException;
+import run.soeasy.framework.codec.CodecException;
 import run.soeasy.framework.core.collection.ArrayUtils;
 import run.soeasy.framework.core.math.NumberUnit;
 import run.soeasy.framework.core.math.NumberUtils;
@@ -48,7 +47,7 @@ public final class RmbFormat implements Codec<BigDecimal, String> {
 	}
 
 	@Override
-	public String encode(BigDecimal money) throws EncodeException {
+	public String encode(BigDecimal money) throws CodecException {
 		StringBuilder sb = new StringBuilder();
 		BigDecimal number = money.abs();
 		BigDecimal[] decimals = number.divideAndRemainder(BigDecimal.ONE);
@@ -70,7 +69,7 @@ public final class RmbFormat implements Codec<BigDecimal, String> {
 	}
 
 	@Override
-	public BigDecimal decode(String money) throws DecodeException {
+	public BigDecimal decode(String money) throws CodecException {
 		int index = money.indexOf("整");
 		if (index == -1) {
 			// 不是整数

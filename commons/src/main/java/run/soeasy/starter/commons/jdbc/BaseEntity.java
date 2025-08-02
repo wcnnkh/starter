@@ -5,7 +5,6 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import run.soeasy.framework.io.watch.Variable;
 
 /**
  * 基础实体类定义
@@ -15,7 +14,7 @@ import run.soeasy.framework.io.watch.Variable;
  * @param <U> 用户标识类型
  */
 @Data
-public class BaseEntity<U> implements Serializable, Variable {
+public class BaseEntity<U> implements Serializable {
 	public static final String TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
 	private static final long serialVersionUID = 1L;
 	/**
@@ -41,9 +40,4 @@ public class BaseEntity<U> implements Serializable, Variable {
 	 * 数据版本号
 	 */
 	private Long dataVersion;
-
-	@Override
-	public long lastModified() {
-		return dataVersion == null ? 0 : dataVersion;
-	}
 }

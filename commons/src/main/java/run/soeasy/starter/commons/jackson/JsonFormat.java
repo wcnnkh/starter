@@ -76,7 +76,7 @@ public class JsonFormat extends JsonMapper implements JacksonFormat, JsonConvert
 	}
 
 	/**
-	 * 初始化默认配置的JSON格式处理器，自动调用{@link #afterProperties()}完成参数配置。
+	 * 初始化默认配置的JSON格式处理器，自动调用{@link #defaultProperties()}完成参数配置。
 	 */
 	public JsonFormat() {
 		super();
