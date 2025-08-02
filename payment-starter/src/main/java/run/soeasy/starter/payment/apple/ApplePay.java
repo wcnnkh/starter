@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
-import run.soeasy.starter.commons.json.JacksonConverter;
-import run.soeasy.starter.commons.web.HttpClient;
+import run.soeasy.starter.commons.jackson.JsonFormat;
+import run.soeasy.starter.commons.web.HttpTemplate;
 
 /**
  * <a href=
@@ -19,10 +19,10 @@ import run.soeasy.starter.commons.web.HttpClient;
 public class ApplePay {
 	static final String SANDBOX_URL = "https://sandbox.itunes.apple.com/verifyReceipt";
 	static final String DEV_URL = "https://buy.itunes.apple.com/verifyReceipt";
-	private static HttpClient httpClient = new HttpClient();
+	private static HttpTemplate httpClient = new HttpTemplate();
 
 	static {
-		httpClient.setJsonFormat(JacksonConverter.SNAKE_CASE);
+		httpClient.setJsonConverter(JsonFormat.SNAKE_CASE);
 	}
 	/**
 	 * 应用程序的共享机密（十六进制字符串）。仅对包含自动续订的收据使用此字段。

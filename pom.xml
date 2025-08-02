@@ -44,18 +44,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<run.soeasy.starter.version>0.0.2</run.soeasy.starter.version>
-		<run.soeasy.framework.version>0.0.3</run.soeasy.framework.version>
+		<run.soeasy.framework.version>0.0.4</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
-		<mybatis.spring.boot.starter.version>2.3.1</mybatis.spring.boot.starter.version>
-		<mybatis.plus.boot.starter.version>3.4.3.4</mybatis.plus.boot.starter.version>
-		<springfox.version>2.9.2</springfox.version>
-		<shardingsphere.jdbc.version>5.1.1</shardingsphere.jdbc.version>
-		<guava.version>32.1.2-jre</guava.version> <!-- 针对JRE环境的版本 -->
 		<bouncycastle.version>1.70</bouncycastle.version>
-		<apache.commons.net.version>3.8.0</apache.commons.net.version>
-		<swagger3.version>2.2.15</swagger3.version>
-		<commons-io.version>2.19.0</commons-io.version>
 		<wechatpay-java.version>0.2.17</wechatpay-java.version>
 	</properties>
 	<dependencyManagement>
@@ -66,54 +58,9 @@
 				<version>${wechatpay-java.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>${swagger3.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
 				<version>${bouncycastle.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shardingsphere</groupId>
-				<artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
-				<version>${shardingsphere.jdbc.version}</version>
-			</dependency>
-
-			<!-- Swagger 2 依赖 -->
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger2</artifactId>
-				<version>${springfox.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${springfox.version}</version>
-			</dependency>
-
-			<!-- mybatis -->
-			<dependency>
-				<groupId>org.mybatis.spring.boot</groupId>
-				<artifactId>mybatis-spring-boot-starter</artifactId>
-				<version>${mybatis.spring.boot.starter.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-boot-starter</artifactId>
-				<version>${mybatis.plus.boot.starter.version}</version> <!-- 兼容Spring Boot 2.4.x -->
 			</dependency>
 
 			<!-- Spring Cloud -->
@@ -233,11 +180,6 @@
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
 			<artifactId>slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

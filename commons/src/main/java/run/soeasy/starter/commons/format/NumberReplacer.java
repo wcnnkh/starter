@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 
 import lombok.NonNull;
 import run.soeasy.framework.codec.Codec;
-import run.soeasy.framework.codec.DecodeException;
-import run.soeasy.framework.codec.EncodeException;
+import run.soeasy.framework.codec.CodecException;
 import run.soeasy.framework.core.Assert;
 import run.soeasy.framework.core.StringUtils;
 import run.soeasy.framework.core.math.NumberUtils;
@@ -45,7 +44,7 @@ public final class NumberReplacer implements Codec<BigDecimal, String> {
 	}
 
 	@Override
-	public String encode(BigDecimal source) throws EncodeException {
+	public String encode(BigDecimal source) throws CodecException {
 		if (source == null) {
 			return null;
 		}
@@ -54,7 +53,7 @@ public final class NumberReplacer implements Codec<BigDecimal, String> {
 		return encode(value);
 	}
 
-	public String encode(CharSequence source) throws EncodeException {
+	public String encode(CharSequence source) throws CodecException {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < source.length(); i++) {
 			char v = source.charAt(i);
@@ -68,7 +67,7 @@ public final class NumberReplacer implements Codec<BigDecimal, String> {
 	}
 
 	@Override
-	public BigDecimal decode(String source) throws DecodeException {
+	public BigDecimal decode(String source) throws CodecException {
 		if (source == null) {
 			return null;
 		}

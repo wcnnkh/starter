@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import run.soeasy.framework.core.convert.TypeDescriptor;
 import run.soeasy.framework.json.JsonConverter;
 import run.soeasy.framework.json.JsonElement;
-import run.soeasy.starter.commons.json.JacksonConverter;
+import run.soeasy.starter.commons.jackson.JsonFormat;
 
 public class JsonConverterTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void test() {
-		JsonConverter jsonConverter = JacksonConverter.DEFAULT;
+		JsonConverter jsonConverter = JsonFormat.DEFAULT;
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", UUID.randomUUID());
 		String json = jsonConverter.convert(map, String.class);
@@ -23,7 +23,7 @@ public class JsonConverterTest {
 		map = (Map<String, Object>) jsonConverter.convert(json, TypeDescriptor.map(HashMap.class, String.class, Object.class));
 		System.out.println(map);
 		
-		JsonElement jsonElement = JacksonConverter.DEFAULT.toJsonElement(json);
+		JsonElement jsonElement = JsonFormat.DEFAULT.toJsonElement(json);
 		assert !jsonElement.isJsonArray();
 		assert jsonElement.isJsonObject();
 
