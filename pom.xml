@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.4 -DgenerateBackupPoms=false -->
-	<version>0.0.4</version>
+	<!-- mvn versions:set -DnewVersion=0.0.5 -DgenerateBackupPoms=false -->
+	<version>0.0.5</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
