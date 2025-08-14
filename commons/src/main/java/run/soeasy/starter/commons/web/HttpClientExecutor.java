@@ -26,7 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.convert.TypeDescriptor;
-import run.soeasy.framework.json.JsonConverter;
 import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
 import run.soeasy.starter.commons.jackson.JsonFormat;
 import run.soeasy.starter.commons.jackson.XmlFormat;
@@ -91,23 +90,21 @@ public interface HttpClientExecutor {
 	/**
 	 * 通用HTTP请求执行方法，支持自定义转换器和请求体类型
 	 * <p>
-	 * 提供参数处理、请求体转换和请求构建的统一实现，适用于各种数据格式的HTTP请求。
-	 * 支持多种参数类型，并根据指定的转换器处理请求体序列化。
+	 * 提供参数处理、请求体转换和请求构建的统一实现，适用于各种数据格式的HTTP请求。 支持多种参数类型，并根据指定的转换器处理请求体序列化。
 	 * 
-	 * @param uri            请求的URI地址
-	 * @param httpMethod     HTTP请求方法（GET/POST/PUT等）
-	 * @param responseType   响应数据的目标类型
-	 * @param params         URL查询参数（支持字符串、Map或普通对象）
-	 * @param httpHeaders    请求头信息（可为null）
-	 * @param body           请求体内容（将通过转换器序列化）
-	 * @param bodyClass      请求体目标类型（通常为String）
-	 * @param converter      用于序列化请求体的转换器
-	 * @param <S>            请求体目标类型泛型
-	 * @param <T>            响应体类型泛型
+	 * @param uri          请求的URI地址
+	 * @param httpMethod   HTTP请求方法（GET/POST/PUT等）
+	 * @param responseType 响应数据的目标类型
+	 * @param params       URL查询参数（支持字符串、Map或普通对象）
+	 * @param httpHeaders  请求头信息（可为null）
+	 * @param body         请求体内容（将通过转换器序列化）
+	 * @param bodyClass    请求体目标类型（通常为String）
+	 * @param converter    用于序列化请求体的转换器
+	 * @param <S>          请求体目标类型泛型
+	 * @param <T>          响应体类型泛型
 	 * @return 包含响应信息的HttpResponseEntity对象，已关联指定转换器
 	 * @throws HttpClientException 当请求执行或参数转换失败时抛出
 	 */
-	@SuppressWarnings("unchecked")
 	default <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
 			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass,
 			Converter converter) throws HttpClientException {
@@ -126,16 +123,10 @@ public interface HttpClientExecutor {
 					queryStringConverter = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
 				}
 
-				// 将参数转换为Map（优先使用指定转换器，其次使用查询字符串转换器）
-				Map<Object, Object> uriVariables;
-				if (params instanceof Map) {
-					uriVariables = ((Map<Object, Object>) params);
-				} else if (converter != null) {
-					uriVariables = converter.convert(params, Map.class);
-				} else {
-					uriVariables = queryStringConverter.convert(params, Map.class);
+				if (!(params instanceof Map) && converter != null) {
+					params = converter.convert(params, Map.class);
 				}
-				queryString = queryStringConverter.convert(uriVariables, String.class);
+				queryString = queryStringConverter.convert(params, String.class);
 			}
 			// 拼接查询字符串到URI
 			uri = UriComponentsBuilder.fromUriString(uri).query(queryString).build().toUriString();
@@ -155,7 +146,6 @@ public interface HttpClientExecutor {
 		}
 		return response;
 	}
-	
 
 	/**
 	 * 发送JSON格式的请求（支持任意HTTP方法）
@@ -330,7 +320,7 @@ public interface HttpClientExecutor {
 	 * @param jsonConverter 新的 JSON 转换器
 	 * @throws HttpClientException 当配置失败时抛出
 	 */
-	default void setJsonConverter(JsonConverter jsonConverter) throws HttpClientException {
+	default void setJsonConverter(Converter jsonConverter) throws HttpClientException {
 		throw new UnsupportedOperationException("Not supported in default implementation, please override");
 	}
 
@@ -370,4 +360,3 @@ public interface HttpClientExecutor {
 		throw new UnsupportedOperationException("Not supported in default implementation, please override");
 	}
 }
-    
