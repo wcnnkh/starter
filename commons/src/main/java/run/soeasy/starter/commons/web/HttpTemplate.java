@@ -59,7 +59,7 @@ public class HttpTemplate extends RestTemplate implements HttpClientExecutor {
      * <p>查找顺序：
      * <ol>
      *   <li>从{@link #mediaTypeConverterRegistry}中查找匹配的转换器</li>
-     *   <li>若未找到，调用{@link HttpClientExecutor#super.getConverter(MediaType)}（系统级注册表）</li>
+     *   <li>若未找到，调用{@link HttpClientExecutor#getConverter(MediaType)}（系统级注册表）</li>
      * </ol>
      * 
      * @param mediaType 目标媒体类型（不可为null）

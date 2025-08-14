@@ -37,7 +37,7 @@ import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
  * <li>灵活的数据转换：通过媒体类型（MediaType）自动匹配转换器，支持多种数据格式</li>
  * <li>参数与请求体处理：自动转换查询参数和请求体，简化API调用逻辑</li>
  * <li>安全通信支持：SSL/TLS证书加载与配置，保障HTTPS通信安全</li>
- * <li>默认实现便捷方法：如{@link #get(String, Object, HttpMethod, HttpHeaders, MediaType, Type)}和{@link #post(String, Object, HttpMethod, HttpHeaders, MediaType, Type, MediaType, Object)}，支持请求头合并，减少重复代码</li>
+ * <li>默认实现便捷方法：如{@link #get(String, Object, HttpMethod, MediaType, Type, HttpHeaders)}和{@link #post(String, Object, HttpMethod, MediaType, Type, HttpHeaders, MediaType, Object)}，支持请求头合并，减少重复代码</li>
  * </ul>
  * 
  * <p>
