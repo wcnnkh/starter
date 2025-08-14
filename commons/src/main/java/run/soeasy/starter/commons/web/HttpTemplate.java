@@ -1,7 +1,6 @@
 package run.soeasy.starter.commons.web;
 
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.SSLContext;
 
@@ -14,101 +13,102 @@ import org.springframework.web.client.RestTemplate;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import run.soeasy.framework.json.JsonConverter;
-import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
-import run.soeasy.starter.commons.jackson.JsonFormat;
+import run.soeasy.framework.core.convert.Converter;
 
 /**
- * 增强型 HTTP 客户端，扩展 Spring RestTemplate 功能
+ * 增强型HTTP客户端实现类，继承Spring RestTemplate并实现HttpClientExecutor接口，整合类型安全请求处理与灵活的数据转换能力。
  * 
- * <p>
- * 作为 RESTful API 调用的核心组件，提供：
+ * <p>核心特性：
  * <ul>
- * <li>智能参数处理：自动转换 GET 请求参数为查询字符串</li>
- * <li>统一日志追踪：通过 UUID 关联全链路请求/响应日志</li>
- * <li>灵活 JSON 处理：支持自定义序列化/反序列化策略</li>
- * <li>安全通信支持：SSL/TLS 证书配置与管理</li>
- * <li>类型安全响应：基于泛型的响应体自动转换</li>
+ *   <li>内置媒体类型转换器注册表：通过{@link #mediaTypeConverterRegistry}管理自定义转换器，支持灵活扩展数据格式处理</li>
+ *   <li>类型安全响应处理：基于{@link ParameterizedTypeReference}解决泛型类型擦除问题，支持复杂类型（如List&amp;lt;T&amp;gt;）自动转换</li>
+ *   <li>SSL/TLS配置：通过{@link #setSSLContext(SSLContext)}自定义安全上下文，适配HTTPS场景</li>
+ *   <li>兼容HttpClientExecutor契约：实现标准化HTTP操作接口，与框架其他组件无缝协作</li>
  * </ul>
  * 
- * <p>
- * 典型使用场景：
+ * <p>转换器查找逻辑：调用{@link #getConverter(MediaType)}时，优先从当前实例的{@link #mediaTypeConverterRegistry}查找；
+ * 若未找到，则委托给{@link HttpClientExecutor}接口的默认实现（系统级注册表），兼顾自定义需求与系统默认配置。
  * 
+ * <p>典型用法：
  * <pre>
- * // 创建客户端实例
- * HttpTemplate httpClient = new HttpTemplate();
+ * // 创建客户端并注册自定义转换器
+ * HttpTemplate httpTemplate = new HttpTemplate();
+ * httpTemplate.getMediaTypeConverterRegistry().register(MediaType.TEXT_PLAIN, new StringConverter());
  * 
- * // 配置 SSL 证书（可选）
- * httpClient.loadKeyMaterial(new ClassPathResource("client-cert.p12"), "storePassword", "keyPassword");
- * 
- * // 执行 GET 请求
- * HttpResponseEntity&lt;User&gt; response = httpClient.getJson("/api/users/{id}", Map.of("id", 123), User.class);
- * User user = response.getBody();
- * 
- * // 执行 POST 请求
- * HttpResponseEntity&lt;LoginResponse&gt; loginResponse = httpClient.postJson("/api/login", null,
- * 		new LoginRequest("username", "password"), LoginResponse.class);
+ * // 执行带泛型响应的请求
+ * RequestEntity&lt;Void&gt; request = RequestEntity.get("/api/users").build();
+ * ResponseEntity&lt;List&lt;User&gt;&gt; response = httpTemplate.doRequest(request, new TypeToken&lt;List&lt;User&gt;&gt;(){}.getType());
  * </pre>
  * 
- * @author soeasy.run
  * @see RestTemplate
  * @see HttpClientExecutor
- * @see HttpResponseEntity
+ * @see MediaTypeConverterRegistry
+ * @see ParameterizedTypeReference
  */
 @Getter
 @Setter
 public class HttpTemplate extends RestTemplate implements HttpClientExecutor {
-	/** JSON 转换器，默认使用框架提供的默认实现 */
-	@NonNull
-	private JsonConverter jsonConverter = JsonFormat.DEFAULT;
+    /**
+     * 媒体类型转换器注册表，用于管理当前实例的{@link MediaType}与{@link Converter}映射关系。
+     * <p>支持注册自定义转换器，优先级高于系统级注册表，适用于当前实例的个性化数据转换需求。
+     */
+    private final MediaTypeConverterRegistry mediaTypeConverterRegistry = new MediaTypeConverterRegistry();
 
-	/** URL 查询参数格式化器，默认使用 UTF-8 编码 */
-	@NonNull
-	private QueryStringFormat queryStringFormat = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
+    /**
+     * 获取指定媒体类型对应的转换器，优先查找当前实例注册表，未找到则委托给接口默认实现。
+     * <p>查找顺序：
+     * <ol>
+     *   <li>从{@link #mediaTypeConverterRegistry}中查找匹配的转换器</li>
+     *   <li>若未找到，调用{@link HttpClientExecutor#getConverter(MediaType)}（系统级注册表）</li>
+     * </ol>
+     * 
+     * @param mediaType 目标媒体类型（不可为null）
+     * @return 匹配的转换器；若未找到则返回null
+     */
+    @Override
+    public Converter getConverter(@NonNull MediaType mediaType) {
+        Converter converter = mediaTypeConverterRegistry.getConverter(mediaType);
+        if (converter != null) {
+            return converter;
+        }
+        return HttpClientExecutor.super.getConverter(mediaType);
+    }
 
-	/** JSON 请求的媒体类型，默认使用 UTF-8 编码的 APPLICATION_JSON */
-	@NonNull
-	private MediaType jsonMediaType = DEFAULT_JSON_MEDIA_TYPE;
+    /**
+     * 执行HTTP请求并返回类型安全的响应实体，解决泛型类型擦除问题。
+     * <p>通过{@link ParameterizedTypeReference}包装响应类型，保留泛型信息，
+     * 底层调用{@link RestTemplate#exchange(RequestEntity, ParameterizedTypeReference)}实现请求发送与响应转换。
+     * 
+     * @param <S> 请求体类型
+     * @param <T> 响应体类型（支持泛型）
+     * @param requestEntity 封装完整请求信息的实体（包含URL、方法、头信息、请求体）
+     * @param responseType 响应数据的目标类型（如new TypeToken&lt;List&lt;User&gt;&gt;(){}.getType()）
+     * @return 包含响应状态码、头信息和转换后响应体的ResponseEntity
+     * @throws HttpClientException 当请求执行失败（如网络异常、转换错误）时抛出
+     */
+    @Override
+    public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType)
+            throws HttpClientException {
+        return exchange(requestEntity, new ParameterizedTypeReference<T>() {
+            @Override
+            public Type getType() {
+                return responseType;
+            }
+        });
+    }
 
-	/**
-	 * 执行 HTTP 请求并返回类型安全的响应实体
-	 * 
-	 * <p>
-	 * 该方法通过 Spring 的 ParameterizedTypeReference 实现泛型类型安全， 支持复杂响应类型（如
-	 * List&lt;User&gt;）的正确解析。
-	 * 
-	 * @param <S>           请求体类型
-	 * @param <T>           响应体类型
-	 * @param requestEntity 完整的请求实体
-	 * @param responseType  响应类型的反射表示
-	 * @return 类型安全的响应实体
-	 * @throws HttpClientException 当请求执行失败时抛出
-	 */
-	@Override
-	public <S, T> ResponseEntity<T> executeRequest(RequestEntity<S> requestEntity, Type responseType)
-			throws HttpClientException {
-		return exchange(requestEntity, new ParameterizedTypeReference<T>() {
-			@Override
-			public Type getType() {
-				return responseType;
-			}
-		});
-	}
-
-	/**
-	 * 设置 SSL 上下文，启用 HTTPS 通信
-	 * 
-	 * <p>
-	 * 该方法会创建新的 {@link SimpleClientHttpsRequestFactory}， 并将其设置为 RestTemplate
-	 * 的请求工厂，从而应用 SSL 配置。
-	 * 
-	 * @param sslContext 要设置的 SSL 上下文，可为 null（重置为默认配置）
-	 * @throws HttpClientException 当 SSL 配置失败时抛出
-	 */
-	@Override
-	public void setSSLContext(SSLContext sslContext) throws HttpClientException {
-		SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
-		httpsRequestFactory.setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
-		setRequestFactory(httpsRequestFactory);
-	}
+    /**
+     * 设置SSL上下文，配置HTTPS通信的安全参数。
+     * <p>通过创建{@link SimpleClientHttpsRequestFactory}替换默认请求工厂，将SSL上下文应用于HTTP客户端，
+     * 支持自定义证书、加密套件等安全配置。当{@code sslContext}为null时，使用默认SSL配置。
+     * 
+     * @param sslContext 包含安全配置的SSL上下文（可为null）
+     * @throws HttpClientException 当请求工厂配置失败时抛出
+     */
+    @Override
+    public void setSSLContext(SSLContext sslContext) throws HttpClientException {
+        SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
+        httpsRequestFactory.setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
+        setRequestFactory(httpsRequestFactory);
+    }
 }
