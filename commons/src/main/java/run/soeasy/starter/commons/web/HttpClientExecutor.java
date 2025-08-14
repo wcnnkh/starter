@@ -201,7 +201,6 @@ public interface HttpClientExecutor extends MediaTypeConverterFactory {
 			headers.putAll(httpHeaders);
 		}
 		headers.setAccept(Arrays.asList(acceptMediaType));
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		HttpResponseEntity<String> response = doRequest(uri, httpMethod, String.class, params, headers, null, null,
 				null);
 		return response.getBody(responseType);
