@@ -9,7 +9,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
@@ -25,89 +25,90 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
-import run.soeasy.framework.core.convert.TypeDescriptor;
 import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
-import run.soeasy.starter.commons.jackson.JsonFormat;
-import run.soeasy.starter.commons.jackson.XmlFormat;
 
 /**
- * 函数式接口：定义 HTTP 请求执行的核心抽象
+ * 函数式接口：定义HTTP请求执行的核心抽象，继承媒体类型转换器工厂以支持数据格式转换。
  * 
  * <p>
- * 作为 HTTP 客户端的基础契约，提供：
+ * 作为HTTP客户端的基础契约，整合了请求处理、数据转换和安全配置能力，主要提供：
  * <ul>
- * <li>标准化的请求-响应模型（基于 Spring HTTP 模型）</li>
- * <li>泛型类型安全的响应处理</li>
- * <li>默认实现的便捷方法（简化常见 HTTP 操作）</li>
- * <li>与 Spring 生态无缝集成（兼容 RestTemplate 扩展）</li>
+ * <li>标准化请求-响应模型：基于Spring HTTP组件（RequestEntity/ResponseEntity）</li>
+ * <li>灵活的数据转换：通过媒体类型（MediaType）自动匹配转换器，支持多种数据格式</li>
+ * <li>参数与请求体处理：自动转换查询参数和请求体，简化API调用逻辑</li>
+ * <li>安全通信支持：SSL/TLS证书加载与配置，保障HTTPS通信安全</li>
+ * <li>默认实现便捷方法：如{@link #get(String, Object, HttpMethod, HttpHeaders, MediaType, Type)}和{@link #post(String, Object, HttpMethod, HttpHeaders, MediaType, Type, MediaType, Object)}，支持请求头合并，减少重复代码</li>
  * </ul>
  * 
  * <p>
- * 实现类需专注于底层通信细节（如 Apache HttpClient/OkHttp 连接管理）， 本接口则定义通用的 HTTP 操作语义和上层逻辑。
+ * 实现类应专注于底层通信细节（如连接池管理、超时控制、重试机制等），本接口则定义通用操作语义，
+ * 与Spring生态无缝集成，兼容RestTemplate等组件的扩展。
  * 
+ * @see MediaTypeConverterFactory
  * @see org.springframework.http.RequestEntity
  * @see org.springframework.http.ResponseEntity
  * @see HttpResponseEntity
  */
 @FunctionalInterface
-public interface HttpClientExecutor {
+public interface HttpClientExecutor extends MediaTypeConverterFactory {
 
 	/**
-	 * 默认 JSON 媒体类型：application/json;charset=UTF-8
+	 * 根据媒体类型获取对应的转换器，从系统转换器注册表中查找。
 	 * <p>
-	 * 用于设置JSON请求的Content-Type头信息
-	 */
-	MediaType DEFAULT_JSON_MEDIA_TYPE = new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8);
-
-	/**
-	 * 默认 XML 媒体类型：application/xml;charset=UTF-8
-	 * <p>
-	 * 用于设置XML请求的Content-Type头信息
-	 */
-	MediaType DEFAULT_XML_MEDIA_TYPE = new MediaType(MediaType.APPLICATION_XML, StandardCharsets.UTF_8);
-
-	/**
-	 * 描述 GET 请求参数的 Map 类型（键值均为 Object）
-	 * <p>
-	 * 用于类型转换时指定源类型描述
-	 */
-	TypeDescriptor GET_PARAMETER_MAP_TYPE = TypeDescriptor.map(LinkedHashMap.class, Object.class, Object.class);
-
-	/**
-	 * 执行HTTP请求的核心方法
-	 * <p>
-	 * 实现类需提供具体的HTTP请求发送和响应处理逻辑
+	 * 实现{@link MediaTypeConverterFactory}接口的核心方法，用于根据请求/响应的Content-Type
+	 * 自动匹配合适的转换器（如JSON/XML转换器），支持数据的序列化与反序列化。
 	 * 
-	 * @param requestEntity 封装了请求信息的对象，包含URL、方法、头信息和请求体
-	 * @param responseType  响应数据的目标类型
+	 * @param mediaType 媒体类型（如application/json、application/xml），不可为null
+	 * @return 匹配的转换器，若未找到则可能返回null（取决于注册表实现）
+	 */
+	@Override
+	default Converter getConverter(@NonNull MediaType mediaType) {
+		return MediaTypeConverterRegistry.system().getConverter(mediaType);
+	}
+
+	/**
+	 * 执行HTTP请求的核心方法，是函数式接口的唯一抽象方法。
+	 * <p>
+	 * 实现类需提供具体的HTTP通信逻辑，包括请求发送、响应接收、异常处理等，
+	 * 并根据指定的响应类型{@code responseType}完成响应体的类型转换。
+	 * 
 	 * @param <S>           请求体的类型
 	 * @param <T>           响应体的类型
-	 * @return 包含响应状态、头信息和响应体的ResponseEntity对象
-	 * @throws HttpClientException 当请求执行过程中发生错误时抛出
+	 * @param requestEntity 封装完整请求信息的对象，包含URI、HTTP方法、请求头、请求体等，不可为null
+	 * @param responseType  响应体的目标类型（支持泛型，如List&amp;lt;User&amp;gt;.class），不可为null
+	 * @return 包含响应状态码、响应头和转换后响应体的ResponseEntity对象
+	 * @throws HttpClientException 当请求执行失败时抛出（如网络异常、转换失败、状态码错误等）
 	 */
-	<S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType) throws HttpClientException;
+	<S, T> ResponseEntity<T> doRequest(@NonNull RequestEntity<S> requestEntity, @NonNull Type responseType)
+			throws HttpClientException;
 
 	/**
-	 * 通用HTTP请求执行方法，支持自定义转换器和请求体类型
+	 * 通用HTTP请求执行方法，支持自定义转换器和请求体类型，简化参数与请求体处理。
 	 * <p>
-	 * 提供参数处理、请求体转换和请求构建的统一实现，适用于各种数据格式的HTTP请求。 支持多种参数类型，并根据指定的转换器处理请求体序列化。
+	 * 提供一站式请求构建能力，自动处理：
+	 * <ol>
+	 * <li>查询参数转换：将对象/Map转换为URL查询字符串（支持自定义字符集）</li>
+	 * <li>请求体序列化：根据指定转换器或Content-Type自动序列化请求体</li>
+	 * <li>响应转换器关联：为返回的HttpResponseEntity绑定合适的转换器，便于后续处理</li>
+	 * </ol>
 	 * 
-	 * @param uri          请求的URI地址
-	 * @param httpMethod   HTTP请求方法（GET/POST/PUT等）
-	 * @param responseType 响应数据的目标类型
-	 * @param params       URL查询参数（支持字符串、Map或普通对象）
-	 * @param httpHeaders  请求头信息（可为null）
-	 * @param body         请求体内容（将通过转换器序列化）
-	 * @param bodyClass    请求体目标类型（通常为String）
-	 * @param converter    用于序列化请求体的转换器
-	 * @param <S>          请求体目标类型泛型
+	 * @param <S>          请求体目标类型泛型（通常为String，用于序列化后的请求体）
 	 * @param <T>          响应体类型泛型
-	 * @return 包含响应信息的HttpResponseEntity对象，已关联指定转换器
-	 * @throws HttpClientException 当请求执行或参数转换失败时抛出
+	 * @param uri          请求的URI地址（支持占位符，如/api/users/{id}），不可为null
+	 * @param httpMethod   HTTP请求方法（如GET/POST/PUT/DELETE），不可为null
+	 * @param responseType 响应体的目标类型，不可为null
+	 * @param params       URL查询参数（支持字符串、Map或普通对象，null表示无参数）
+	 * @param httpHeaders  请求头信息（null表示使用默认头信息）
+	 * @param body         请求体内容（null表示无请求体）
+	 * @param bodyClass    请求体序列化后的目标类型（通常为String）
+	 * @param converter    用于请求体序列化的转换器（null则根据Content-Type自动获取）
+	 * @return 包含响应信息的HttpResponseEntity对象，已关联合适的转换器
+	 * @throws HttpClientException 当参数转换失败、请求执行异常或响应处理错误时抛出
 	 */
 	default <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
 			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass,
 			Converter converter) throws HttpClientException {
+		MediaType contentType = httpHeaders == null ? null : httpHeaders.getContentType();
 		if (params != null) {
 			String queryString;
 			if (params instanceof String) {
@@ -115,16 +116,23 @@ public interface HttpClientExecutor {
 				queryString = (String) params;
 			} else {
 				// 根据请求头字符集获取对应的查询字符串转换器
-				MediaType mediaType = httpHeaders == null ? null : httpHeaders.getContentType();
 				Converter queryStringConverter;
-				if (mediaType != null && mediaType.getCharset() != null) {
-					queryStringConverter = QueryStringFormat.getFormat(mediaType.getCharset());
+				if (contentType != null && contentType.getCharset() != null) {
+					queryStringConverter = QueryStringFormat.getFormat(contentType.getCharset());
 				} else {
 					queryStringConverter = QueryStringFormat.getFormat(StandardCharsets.UTF_8);
 				}
 
-				if (!(params instanceof Map) && converter != null) {
-					params = converter.convert(params, Map.class);
+				// 将非Map类型参数转换为Map（优先使用指定转换器，其次使用内容类型对应的转换器）
+				if (!(params instanceof Map)) {
+					if (converter != null && converter.canConvert(params.getClass(), Map.class)) {
+						params = converter.convert(params, Map.class);
+					} else if (contentType != null) {
+						Converter paramsConverter = getConverter(contentType);
+						if (paramsConverter != null && paramsConverter.canConvert(params.getClass(), Map.class)) {
+							params = paramsConverter.convert(params, Map.class);
+						}
+					}
 				}
 				queryString = queryStringConverter.convert(params, String.class);
 			}
@@ -132,152 +140,125 @@ public interface HttpClientExecutor {
 			uri = UriComponentsBuilder.fromUriString(uri).query(queryString).build().toUriString();
 		}
 
-		// 使用指定转换器序列化请求体（仅当满足转换条件时）
-		if (body != null && bodyClass != null && converter != null && !bodyClass.isInstance(body)) {
-			body = converter.convert(body, bodyClass);
+		// 使用指定转换器或内容类型对应的转换器序列化请求体
+		if (body != null && bodyClass != null && !bodyClass.isInstance(body)) {
+			if (converter != null && converter.canConvert(body.getClass(), bodyClass)) {
+				body = converter.convert(body, bodyClass);
+			} else if (contentType != null) {
+				Converter bodyConverter = getConverter(contentType);
+				if (bodyConverter != null && bodyConverter.canConvert(body.getClass(), bodyClass)) {
+					body = bodyConverter.convert(body, bodyClass);
+				}
+			}
 		}
 
+		// 构建请求实体并执行请求
 		RequestEntity<Object> requestEntity = RequestEntity.method(httpMethod, URI.create(uri)).headers(httpHeaders)
 				.body(body);
 		ResponseEntity<T> responseEntity = doRequest(requestEntity, responseType);
 		HttpResponseEntity<T> response = new HttpResponseEntity<>(responseEntity);
+
+		// 为响应绑定转换器（优先使用指定转换器，其次使用响应内容类型对应的转换器）
 		if (converter != null) {
 			response.setConverter(converter);
+		} else {
+			MediaType responseContentType = response.getHeaders().getContentType();
+			if (responseContentType != null) {
+				Converter responseConverter = getConverter(responseContentType);
+				if (responseConverter != null) {
+					response.setConverter(responseConverter);
+				}
+			}
 		}
 		return response;
 	}
 
 	/**
-	 * 发送JSON格式的请求（支持任意HTTP方法）
+	 * 发送获取数据的请求（适用于GET、HEAD等无请求体的方法），支持请求头合并与自动响应转换。
 	 * <p>
-	 * 自动处理JSON序列化和Content-Type头信息设置，适用于需要JSON请求体的各种HTTP方法
-	 * （如POST/PUT/PATCH等）。若请求头未指定Content-Type，将自动设置为默认JSON媒体类型。
+	 * 请求头处理逻辑：
+	 * <ul>
+	 * <li>创建新的{@link HttpHeaders}实例作为基础</li>
+	 * <li>若传入{@code httpHeaders}不为null，将其所有头信息复制到新实例中（实现自定义头与默认头的合并）</li>
+	 * <li>设置默认头：Accept为{@code acceptMediaType}（声明期望响应格式），Content-Type为{@link MediaType#APPLICATION_FORM_URLENCODED}（适配表单参数）</li>
+	 * </ul>
+	 * 响应处理：将响应体字符串自动转换为{@code responseType}指定的类型（基于响应Content-Type匹配转换器）。
 	 * 
-	 * @param uri          请求的URI地址
-	 * @param httpMethod   HTTP请求方法（如POST/PUT/PATCH等）
-	 * @param responseType 响应数据的目标类型
-	 * @param params       URL查询参数（支持字符串、Map或普通对象）
-	 * @param headers      请求头信息（可为null，自动补充Content-Type）
-	 * @param body         请求体内容（非字符串类型将被序列化为JSON）
-	 * @param <T>          响应体的类型
-	 * @return 包含响应数据的HttpResponseEntity对象，已关联JSON转换器
-	 * @throws HttpClientException 当请求执行或JSON序列化失败时抛出
+	 * @param <T>             响应体类型泛型
+	 * @param uri             请求的URI地址，不可为null
+	 * @param params          URL查询参数（支持字符串、Map或普通对象，null表示无参数）
+	 * @param httpMethod      HTTP请求方法（通常为GET），不可为null
+	 * @param acceptMediaType 期望的响应媒体类型（如application/json），不可为null
+	 * @param responseType    响应体的目标类型（支持泛型，如List&amp;lt;User&amp;gt;），不可为null
+	 * @param httpHeaders     自定义请求头（可包含Authorization等信息，null则仅使用默认头）
+	 * @return 转换后的响应体对象（类型为{T}）
+	 * @throws HttpClientException 当请求执行失败或响应转换异常时抛出
 	 */
-	default <T> HttpResponseEntity<T> doJson(@NonNull String uri, @NonNull HttpMethod httpMethod,
-			@NonNull Type responseType, Object params, HttpHeaders headers, Object body) throws HttpClientException {
-		if (headers == null) {
-			headers = new HttpHeaders();
+	default <T> T get(@NonNull String uri, Object params, @NonNull HttpMethod httpMethod,
+			@NonNull MediaType acceptMediaType, @NonNull Type responseType, HttpHeaders httpHeaders) {
+		HttpHeaders headers = new HttpHeaders();
+		if (httpHeaders != null) {
+			headers.putAll(httpHeaders);
 		}
+		headers.setAccept(Arrays.asList(acceptMediaType));
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpResponseEntity<String> response = doRequest(uri, httpMethod, String.class, params, headers, null, null,
+				null);
+		System.out.println(response.getBody());
+		return response.getBody(responseType);
+	}
 
-		// 自动设置 JSON 媒体类型（未指定时）
-		if (httpMethod != HttpMethod.GET && headers.getContentType() == null) {
-			headers.setContentType(getJsonMediaType());
+	/**
+	 * 发送包含数据的请求（适用于POST、PUT等有请求体的方法），支持请求头合并、自动序列化与响应转换。
+	 * <p>
+	 * 请求头处理逻辑：
+	 * <ul>
+	 * <li>创建新的{@link HttpHeaders}实例作为基础</li>
+	 * <li>若传入{@code httpHeaders}不为null，将其所有头信息复制到新实例中（实现自定义头与默认头的合并）</li>
+	 * <li>设置默认头：Accept为{@code acceptMediaType}（声明期望响应格式），Content-Type为{@code contentType}（声明请求体格式）</li>
+	 * </ul>
+	 * 数据处理：根据{@code contentType}匹配转换器序列化{@code content}；响应体自动转换为{@code responseType}指定类型。
+	 * 
+	 * @param <T>             响应体类型泛型
+	 * @param uri             请求的URI地址，不可为null
+	 * @param params          URL查询参数（支持字符串、Map或普通对象，null表示无参数）
+	 * @param httpMethod      HTTP请求方法（通常为POST），不可为null
+	 * @param acceptMediaType 期望的响应媒体类型（如application/json），不可为null
+	 * @param responseType    响应体的目标类型（支持泛型，如Result&amp;lt;User&amp;gt;），不可为null
+	 * @param httpHeaders     自定义请求头（可包含Authorization等信息，null则仅使用默认头）
+	 * @param contentType     请求体的媒体类型（如application/json），不可为null
+	 * @param content         请求体内容（需序列化的数据对象）
+	 * @return 转换后的响应体对象（类型为{T}）
+	 * @throws HttpClientException 当请求执行失败、请求体序列化或响应转换异常时抛出
+	 */
+	default <T> T post(@NonNull String uri, Object params, @NonNull HttpMethod httpMethod,
+			@NonNull MediaType acceptMediaType, @NonNull Type responseType, HttpHeaders httpHeaders,
+			@NonNull MediaType contentType, Object content) {
+		HttpHeaders headers = new HttpHeaders();
+		if (httpHeaders != null) {
+			headers.putAll(httpHeaders);
 		}
-
-		return doRequest(uri, httpMethod, responseType, params, headers, body, String.class, getJsonConverter());
+		headers.setAccept(Arrays.asList(acceptMediaType));
+		headers.setContentType(contentType);
+		HttpResponseEntity<String> response = doRequest(uri, httpMethod, String.class, params, headers, content,
+				String.class, null);
+		return response.getBody(responseType);
 	}
 
 	/**
-	 * 发送XML格式的请求（支持任意HTTP方法）
+	 * 加载SSL密钥材料（如客户端证书），用于配置HTTPS通信的安全上下文。
 	 * <p>
-	 * 自动处理XML序列化和Content-Type头信息设置，适用于需要XML请求体的各种HTTP方法。
-	 * 若请求头未指定Content-Type，将自动设置为默认XML媒体类型。
-	 * 
-	 * @param uri          请求的URI地址
-	 * @param httpMethod   HTTP请求方法（如POST/PUT等）
-	 * @param responseType 响应数据的目标类型
-	 * @param params       URL查询参数（支持字符串、Map或普通对象）
-	 * @param headers      请求头信息（可为null，自动补充Content-Type）
-	 * @param body         请求体内容（非字符串类型将被序列化为XML）
-	 * @param <T>          响应体的类型
-	 * @return 包含响应数据的HttpResponseEntity对象，已关联XML转换器
-	 * @throws HttpClientException 当请求执行或XML序列化失败时抛出
-	 */
-	default <T> HttpResponseEntity<T> doXml(@NonNull String uri, @NonNull HttpMethod httpMethod,
-			@NonNull Type responseType, Object params, HttpHeaders headers, Object body) throws HttpClientException {
-		if (headers == null) {
-			headers = new HttpHeaders();
-		}
-
-		if (httpMethod != HttpMethod.GET && headers.getContentType() == null) {
-			headers.setContentType(getXmlMediaType());
-		}
-
-		// 注意：此处原代码使用了getJsonConverter()，实际应使用getXmlConverter()，建议修正
-		return doRequest(uri, httpMethod, responseType, params, headers, body, String.class, getXmlConverter());
-	}
-
-	/**
-	 * 获取 JSON 转换器（默认实现）
-	 * 
-	 * <p>
-	 * 默认返回框架提供的 JSON 转换器， 实现类可重写此方法提供自定义转换器。
-	 * 
-	 * @return 当前配置的 JSON 转换器
-	 */
-	default Converter getJsonConverter() {
-		return JsonFormat.DEFAULT;
-	}
-
-	/**
-	 * 获取 JSON 请求的媒体类型（默认实现）
-	 * 
-	 * <p>
-	 * 默认返回 application/json;charset=UTF-8， 可通过 {@link #setJsonMediaType(MediaType)}
-	 * 动态修改。
-	 * 
-	 * @return 当前配置的 JSON 媒体类型
-	 */
-	default MediaType getJsonMediaType() {
-		return DEFAULT_JSON_MEDIA_TYPE;
-	}
-
-	/**
-	 * 获取 XML 转换器（默认实现）
-	 * <p>
-	 * 默认返回框架提供的XML转换器，实现类可重写此方法提供自定义转换器
-	 * 
-	 * @return 当前配置的XML转换器
-	 */
-	default Converter getXmlConverter() {
-		return XmlFormat.DEFAULT;
-	}
-
-	/**
-	 * 获取XML请求的媒体类型（默认实现）
-	 * <p>
-	 * 默认返回application/xml;charset=UTF-8
-	 * 
-	 * @return 当前配置的XML媒体类型
-	 */
-	default MediaType getXmlMediaType() {
-		return DEFAULT_XML_MEDIA_TYPE;
-	}
-
-	/**
-	 * 加载 SSL 密钥材料（支持 .p12/.jks 等格式）
-	 * 
-	 * <p>
-	 * 处理流程：
+	 * 支持加载.p12/.jks等格式的密钥库，包含私钥和证书链，适用于需要客户端认证的场景。处理流程：
 	 * <ol>
-	 * <li>验证资源有效性（存在性/可读性）</li>
-	 * <li>根据资源类型（文件/URL）选择加载方式</li>
-	 * <li>使用 Apache HttpClient 构建 SSL 上下文</li>
-	 * <li>通过 {@link #setSSLContext(SSLContext)} 应用配置</li>
+	 * <li>验证资源有效性：检查密钥材料资源是否存在且可读</li>
+	 * <li>构建SSL上下文：根据资源类型（文件/URL）加载密钥库，创建SSLContext</li>
+	 * <li>应用配置：通过{@link #setSSLContext(SSLContext)}将SSL上下文应用到HTTP客户端</li>
 	 * </ol>
 	 * 
-	 * <p>
-	 * 证书要求：
-	 * <ul>
-	 * <li>必须包含私钥和证书链</li>
-	 * <li>推荐使用 PKCS#12 (.p12) 格式</li>
-	 * <li>密钥库密码与私钥密码可相同/不同</li>
-	 * </ul>
-	 * 
-	 * @param keyMaterialResource 密钥材料资源（含私钥和证书）
-	 * @param storePassword       密钥库密码
-	 * @param keyPassword         私钥密码
-	 * @throws HttpClientException 当资源无效/密码错误/加载失败时抛出
+	 * @param keyMaterialResource 密钥材料资源（包含私钥和证书链的密钥库），不可为null
+	 * @param storePassword       密钥库密码（用于解锁密钥库），不可为null
+	 * @param keyPassword         私钥密码（用于解锁私钥，可与密钥库密码相同），不可为null
+	 * @throws HttpClientException 当资源无效、密码错误、密钥库加载失败或SSL上下文创建异常时抛出
 	 */
 	default void loadKeyMaterial(@NonNull Resource keyMaterialResource, @NonNull String storePassword,
 			@NonNull String keyPassword) throws HttpClientException {
@@ -307,56 +288,15 @@ public interface HttpClientExecutor {
 	}
 
 	/**
-	 * 设置 JSON 转换器（默认抛出异常，需实现类重写）
-	 * 
+	 * 设置SSL上下文，配置HTTPS通信的安全参数。
 	 * <p>
-	 * 实现类应实现：
-	 * <ul>
-	 * <li>动态替换 JSON 转换器</li>
-	 * <li>线程安全的配置更新</li>
-	 * <li>不影响已创建的请求实例</li>
-	 * </ul>
+	 * SSL上下文包含加密套件、证书验证策略等安全配置，设置后HTTP客户端将使用该上下文进行HTTPS通信。
+	 * 默认实现抛出不支持操作异常，需要具体实现类重写以提供实际逻辑（如配置请求工厂的SSL套接字工厂）。
 	 * 
-	 * @param jsonConverter 新的 JSON 转换器
-	 * @throws HttpClientException 当配置失败时抛出
-	 */
-	default void setJsonConverter(Converter jsonConverter) throws HttpClientException {
-		throw new UnsupportedOperationException("Not supported in default implementation, please override");
-	}
-
-	/**
-	 * 设置JSON请求的媒体类型
-	 * <p>
-	 * 默认实现抛出不支持操作异常，实现类需重写此方法以支持自定义媒体类型
-	 * 
-	 * @param mediaType 新的JSON媒体类型
-	 * @throws HttpClientException 当配置失败时抛出
-	 */
-	default void setJsonMediaType(MediaType mediaType) throws HttpClientException {
-		throw new UnsupportedOperationException("Not supported in default implementation, please override");
-	}
-
-	/**
-	 * 设置SSL上下文
-	 * <p>
-	 * 默认实现抛出不支持操作异常，实现类需重写此方法以支持SSL配置
-	 * 
-	 * @param sslContext 要设置的SSL上下文
-	 * @throws HttpClientException 当配置失败时抛出
+	 * @param sslContext 要应用的SSL上下文（null表示使用默认安全配置）
+	 * @throws HttpClientException 当SSL上下文配置失败时抛出（如不支持的SSL协议、无效配置等）
 	 */
 	default void setSSLContext(SSLContext sslContext) throws HttpClientException {
-		throw new UnsupportedOperationException("Not supported in default implementation, please override");
-	}
-
-	/**
-	 * 设置XML转换器
-	 * <p>
-	 * 默认实现抛出不支持操作异常，实现类需重写此方法以支持自定义XML转换器
-	 * 
-	 * @param xmlConverter 新的XML转换器
-	 * @throws HttpClientException 当配置失败时抛出
-	 */
-	default void setXmlConverter(Converter xmlConverter) throws HttpClientException {
 		throw new UnsupportedOperationException("Not supported in default implementation, please override");
 	}
 }

@@ -14,97 +14,101 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import run.soeasy.framework.core.convert.Converter;
-import run.soeasy.starter.commons.jackson.JsonFormat;
-import run.soeasy.starter.commons.jackson.XmlFormat;
 
 /**
- * 增强型HTTP客户端实现类，继承Spring RestTemplate并实现HttpClientExecutor接口
+ * 增强型HTTP客户端实现类，继承Spring RestTemplate并实现HttpClientExecutor接口，整合类型安全请求处理与灵活的数据转换能力。
  * 
- * <p>该类整合了Spring RestTemplate的基础能力与自定义HTTP客户端契约，提供：
+ * <p>核心特性：
  * <ul>
- *   <li>类型安全的HTTP请求/响应处理</li>
- *   <li>内置JSON/XML数据格式转换支持</li>
- *   <li>灵活的SSL/TLS配置能力</li>
- *   <li>与HttpClientExecutor接口定义的标准化操作兼容</li>
+ *   <li>内置媒体类型转换器注册表：通过{@link #mediaTypeConverterRegistry}管理自定义转换器，支持灵活扩展数据格式处理</li>
+ *   <li>类型安全响应处理：基于{@link ParameterizedTypeReference}解决泛型类型擦除问题，支持复杂类型（如List&amp;lt;T&amp;gt;）自动转换</li>
+ *   <li>SSL/TLS配置：通过{@link #setSSLContext(SSLContext)}自定义安全上下文，适配HTTPS场景</li>
+ *   <li>兼容HttpClientExecutor契约：实现标准化HTTP操作接口，与框架其他组件无缝协作</li>
  * </ul>
  * 
- * <p>典型应用场景包括微服务间通信、第三方API调用等需要可靠HTTP客户端支持的场景。
- * 通过泛型类型引用实现复杂响应类型的自动转换，无需手动处理JSON/XML序列化逻辑。
+ * <p>转换器查找逻辑：调用{@link #getConverter(MediaType)}时，优先从当前实例的{@link #mediaTypeConverterRegistry}查找；
+ * 若未找到，则委托给{@link HttpClientExecutor}接口的默认实现（系统级注册表），兼顾自定义需求与系统默认配置。
+ * 
+ * <p>典型用法：
+ * <pre>
+ * // 创建客户端并注册自定义转换器
+ * HttpTemplate httpTemplate = new HttpTemplate();
+ * httpTemplate.getMediaTypeConverterRegistry().register(MediaType.TEXT_PLAIN, new StringConverter());
+ * 
+ * // 执行带泛型响应的请求
+ * RequestEntity&lt;Void&gt; request = RequestEntity.get("/api/users").build();
+ * ResponseEntity&lt;List&lt;User&gt;&gt; response = httpTemplate.doRequest(request, new TypeToken&lt;List&lt;User&gt;&gt;(){}.getType());
+ * </pre>
  * 
  * @see RestTemplate
  * @see HttpClientExecutor
+ * @see MediaTypeConverterRegistry
  * @see ParameterizedTypeReference
  */
 @Getter
 @Setter
 public class HttpTemplate extends RestTemplate implements HttpClientExecutor {
-	/** 
-	 * JSON 转换器，默认使用框架提供的默认实现（JsonFormat.DEFAULT）
-	 * <p>用于请求体JSON序列化和响应体JSON反序列化
-	 */
-	@NonNull
-	private Converter jsonConverter = JsonFormat.DEFAULT;
+    /**
+     * 媒体类型转换器注册表，用于管理当前实例的{@link MediaType}与{@link Converter}映射关系。
+     * <p>支持注册自定义转换器，优先级高于系统级注册表，适用于当前实例的个性化数据转换需求。
+     */
+    private final MediaTypeConverterRegistry mediaTypeConverterRegistry = new MediaTypeConverterRegistry();
 
-	/** 
-	 * XML 转换器，默认使用框架提供的默认实现（XmlFormat.DEFAULT）
-	 * <p>用于请求体XML序列化和响应体XML反序列化
-	 */
-	@NonNull
-	private Converter xmlConverter = XmlFormat.DEFAULT;
+    /**
+     * 获取指定媒体类型对应的转换器，优先查找当前实例注册表，未找到则委托给接口默认实现。
+     * <p>查找顺序：
+     * <ol>
+     *   <li>从{@link #mediaTypeConverterRegistry}中查找匹配的转换器</li>
+     *   <li>若未找到，调用{@link HttpClientExecutor#super.getConverter(MediaType)}（系统级注册表）</li>
+     * </ol>
+     * 
+     * @param mediaType 目标媒体类型（不可为null）
+     * @return 匹配的转换器；若未找到则返回null
+     */
+    @Override
+    public Converter getConverter(@NonNull MediaType mediaType) {
+        Converter converter = mediaTypeConverterRegistry.getConverter(mediaType);
+        if (converter != null) {
+            return converter;
+        }
+        return HttpClientExecutor.super.getConverter(mediaType);
+    }
 
-	/** 
-	 * JSON 请求的媒体类型，默认值为 application/json;charset=UTF-8
-	 * <p>用于设置JSON格式请求的Content-Type头信息
-	 */
-	@NonNull
-	private MediaType jsonMediaType = DEFAULT_JSON_MEDIA_TYPE;
+    /**
+     * 执行HTTP请求并返回类型安全的响应实体，解决泛型类型擦除问题。
+     * <p>通过{@link ParameterizedTypeReference}包装响应类型，保留泛型信息，
+     * 底层调用{@link RestTemplate#exchange(RequestEntity, ParameterizedTypeReference)}实现请求发送与响应转换。
+     * 
+     * @param <S> 请求体类型
+     * @param <T> 响应体类型（支持泛型）
+     * @param requestEntity 封装完整请求信息的实体（包含URL、方法、头信息、请求体）
+     * @param responseType 响应数据的目标类型（如new TypeToken&lt;List&lt;User&gt;&gt;(){}.getType()）
+     * @return 包含响应状态码、头信息和转换后响应体的ResponseEntity
+     * @throws HttpClientException 当请求执行失败（如网络异常、转换错误）时抛出
+     */
+    @Override
+    public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType)
+            throws HttpClientException {
+        return exchange(requestEntity, new ParameterizedTypeReference<T>() {
+            @Override
+            public Type getType() {
+                return responseType;
+            }
+        });
+    }
 
-	/** 
-	 * XML 请求的媒体类型，默认值为 application/xml;charset=UTF-8
-	 * <p>用于设置XML格式请求的Content-Type头信息
-	 */
-	private MediaType xmlMediaType = DEFAULT_XML_MEDIA_TYPE;
-
-	/**
-	 * 执行HTTP请求并返回类型安全的响应实体
-	 * 
-	 * <p>核心实现方法，通过Spring的ParameterizedTypeReference保留泛型类型信息，
-	 * 解决了Java泛型类型擦除导致的复杂类型转换问题。支持如List&lt;T&gt;、Map&lt;K,V&gt;等
-	 * 复杂响应类型的正确解析。
-	 * 
-	 * @param <S> 请求体类型
-	 * @param <T> 响应体类型
-	 * @param requestEntity 封装完整请求信息的实体对象，包含URL、方法、头信息和请求体
-	 * @param responseType 响应数据的目标类型（支持泛型）
-	 * @return 包含响应状态码、响应头和转换后响应体的ResponseEntity对象
-	 * @throws HttpClientException 当请求执行失败（如网络异常、状态码错误等）时抛出
-	 */
-	@Override
-	public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType)
-			throws HttpClientException {
-		return exchange(requestEntity, new ParameterizedTypeReference<T>() {
-			@Override
-			public Type getType() {
-				return responseType;
-			}
-		});
-	}
-
-	/**
-	 * 设置SSL上下文，配置HTTPS通信的安全参数
-	 * 
-	 * <p>该方法通过创建自定义的{@link SimpleClientHttpsRequestFactory}替换默认请求工厂，
-	 * 实现SSL/TLS安全通信配置。适用于需要客户端证书认证或自定义证书验证策略的场景。
-	 * 当sslContext为null时，将使用默认的SSL配置。
-	 * 
-	 * @param sslContext 要应用的SSL上下文，包含加密套件、证书等安全信息
-	 * @throws HttpClientException 当SSL上下文配置失败或请求工厂创建异常时抛出
-	 */
-	@Override
-	public void setSSLContext(SSLContext sslContext) throws HttpClientException {
-		SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
-		httpsRequestFactory.setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
-		setRequestFactory(httpsRequestFactory);
-	}
+    /**
+     * 设置SSL上下文，配置HTTPS通信的安全参数。
+     * <p>通过创建{@link SimpleClientHttpsRequestFactory}替换默认请求工厂，将SSL上下文应用于HTTP客户端，
+     * 支持自定义证书、加密套件等安全配置。当{@code sslContext}为null时，使用默认SSL配置。
+     * 
+     * @param sslContext 包含安全配置的SSL上下文（可为null）
+     * @throws HttpClientException 当请求工厂配置失败时抛出
+     */
+    @Override
+    public void setSSLContext(SSLContext sslContext) throws HttpClientException {
+        SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
+        httpsRequestFactory.setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
+        setRequestFactory(httpsRequestFactory);
+    }
 }
-    
