@@ -17,7 +17,7 @@ import run.soeasy.framework.core.convert.Converter;
  * 
  * @see MediaType
  * @see Converter
- * @see HttpClientExecutor
+ * @see HttpRequestExecutor
  */
 @FunctionalInterface
 public interface MediaTypeConverterFactory {
