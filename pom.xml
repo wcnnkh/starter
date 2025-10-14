@@ -43,8 +43,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.starter.version>0.0.2</run.soeasy.starter.version>
-		<run.soeasy.framework.version>0.0.6</run.soeasy.framework.version>
+		<run.soeasy.starter.version>0.0.6</run.soeasy.starter.version>
+		<run.soeasy.framework.version>0.0.7</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<bouncycastle.version>1.70</bouncycastle.version>

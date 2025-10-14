@@ -1,6 +1,7 @@
 package run.soeasy.starter.commons.web;
 
 import java.lang.reflect.Type;
+import java.net.URI;
 
 import javax.net.ssl.SSLContext;
 
@@ -78,11 +79,11 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	 * @param responseType  响应数据的目标类型（如new
 	 *                      TypeToken&lt;List&lt;User&gt;&gt;(){}.getType()）
 	 * @return 包含响应状态码、头信息和转换后响应体的ResponseEntity
-	 * @throws HttpClientException 当请求执行失败（如网络异常、转换错误）时抛出
+	 * @throws WebException 当请求执行失败（如网络异常、转换错误）时抛出
 	 */
 	@Override
 	public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType)
-			throws HttpClientException {
+			throws WebException {
 		return exchange(requestEntity, new ParameterizedTypeReference<T>() {
 			@Override
 			public Type getType() {
@@ -93,9 +94,13 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 
 	@Override
 	public <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
-			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass)
-			throws HttpClientException {
-		uri = StringUtils.isEmpty(host) ? uri : org.springframework.util.StringUtils.cleanPath(host + uri);
+			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass) {
+		if (StringUtils.isNotEmpty(host)) {
+			URI requestUri = URI.create(uri);
+			if (StringUtils.isEmpty(requestUri.getHost())) {
+				uri = org.springframework.util.StringUtils.cleanPath(host + uri);
+			}
+		}
 		return HttpRequestExecutor.super.doRequest(uri, httpMethod, responseType, params, httpHeaders, body, bodyClass);
 	}
 
@@ -127,10 +132,10 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	 * 支持自定义证书、加密套件等安全配置。当{@code sslContext}为null时，使用默认SSL配置。
 	 * 
 	 * @param sslContext 包含安全配置的SSL上下文（可为null）
-	 * @throws HttpClientException 当请求工厂配置失败时抛出
+	 * @throws WebException 当请求工厂配置失败时抛出
 	 */
 	@Override
-	public void setSSLContext(SSLContext sslContext) throws HttpClientException {
+	public void setSSLContext(SSLContext sslContext) throws WebException {
 		SimpleClientHttpsRequestFactory httpsRequestFactory = new SimpleClientHttpsRequestFactory();
 		httpsRequestFactory.setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
 		setRequestFactory(httpsRequestFactory);
