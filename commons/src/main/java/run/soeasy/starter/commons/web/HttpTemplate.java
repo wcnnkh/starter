@@ -82,8 +82,7 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	 * @throws WebException 当请求执行失败（如网络异常、转换错误）时抛出
 	 */
 	@Override
-	public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType)
-			throws WebException {
+	public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType) throws WebException {
 		return exchange(requestEntity, new ParameterizedTypeReference<T>() {
 			@Override
 			public Type getType() {
@@ -92,6 +91,9 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 		});
 	}
 
+	/**
+	 * 若{@link #host}不为空且请求URI为相对路径，自动拼接为绝对路径；
+	 */
 	@Override
 	public <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
 			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass) {
