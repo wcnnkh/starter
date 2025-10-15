@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.7 -DgenerateBackupPoms=false -->
-	<version>0.0.7</version>
+	<!-- mvn versions:set -DnewVersion=0.0.8 -DgenerateBackupPoms=false -->
+	<version>0.0.8</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -129,17 +129,17 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>commons</artifactId>
-				<version>0.0.7</version>
+				<version>0.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>payment-starter</artifactId>
-				<version>0.0.7</version>
+				<version>0.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>security-starter</artifactId>
-				<version>0.0.7</version>
+				<version>0.0.8</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
