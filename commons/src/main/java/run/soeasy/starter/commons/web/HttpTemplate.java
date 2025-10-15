@@ -98,9 +98,13 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	public <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
 			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass) {
 		if (StringUtils.isNotEmpty(host)) {
-			URI requestUri = URI.create(uri);
-			if (StringUtils.isEmpty(requestUri.getHost())) {
-				uri = org.springframework.util.StringUtils.cleanPath(host + uri);
+			if (StringUtils.isEmpty(uri)) {
+				uri = host;
+			} else {
+				URI requestUri = URI.create(uri);
+				if (StringUtils.isEmpty(requestUri.getHost())) {
+					uri = org.springframework.util.StringUtils.cleanPath(host + uri);
+				}
 			}
 		}
 		return HttpRequestExecutor.super.doRequest(uri, httpMethod, responseType, params, httpHeaders, body, bodyClass);
