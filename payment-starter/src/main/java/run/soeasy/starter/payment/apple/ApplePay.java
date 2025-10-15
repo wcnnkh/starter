@@ -1,6 +1,7 @@
 package run.soeasy.starter.payment.apple;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class ApplePay {
 	private static HttpTemplate httpClient = new HttpTemplate();
 
 	static {
-		httpClient.setJsonConverter(JsonFormat.SNAKE_CASE);
+		httpClient.getMediaTypeConverterRegistry().register(MediaType.APPLICATION_JSON, JsonFormat.SNAKE_CASE);
 	}
 	/**
 	 * 应用程序的共享机密（十六进制字符串）。仅对包含自动续订的收据使用此字段。
@@ -30,9 +31,9 @@ public class ApplePay {
 	private String password;
 
 	public VerifyReceiptResponse verifyReceipt(String host, VerifyReceiptRequest request) {
-		ResponseEntity<VerifyReceiptResponse> response = httpClient.postJson(host, null, request, String.class)
-				.toJSON(VerifyReceiptResponse.class);
-		VerifyReceiptResponse verifyReceiptResponse = response.getBody();
+		VerifyReceiptResponse verifyReceiptResponse = httpClient.doEntityRequest(host, null, HttpMethod.POST,
+				MediaType.APPLICATION_JSON, String.class, null, MediaType.APPLICATION_JSON, request, String.class)
+				.cast(VerifyReceiptResponse.class).getBody();
 		if (verifyReceiptResponse.isUseRetryable() && verifyReceiptResponse.isRetryable()) {
 			return verifyReceipt(host, request);
 		}

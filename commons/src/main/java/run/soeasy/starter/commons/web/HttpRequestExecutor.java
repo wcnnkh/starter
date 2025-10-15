@@ -79,7 +79,7 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * <ol>
 	 * <li>发送请求（基于{@code requestEntity}中的URI、方法、头信息和请求体）</li>
 	 * <li>接收响应并根据{@code responseType}完成响应体的类型转换</li>
-	 * <li>处理通信异常（如连接超时、网络错误等）并封装为{@link HttpClientException}</li>
+	 * <li>处理通信异常（如连接超时、网络错误等）并封装为{@link WebException}</li>
 	 * </ol>
 	 * 
 	 * @param <S>           请求体的类型
@@ -87,10 +87,8 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * @param requestEntity 封装完整请求信息的对象（包含URI、方法、头、请求体等，不可为null）
 	 * @param responseType  响应体的目标类型（支持泛型，如List&lt;User&gt;的Type对象，不可为null）
 	 * @return 包含状态码、响应头和转换后响应体的{@link ResponseEntity}
-	 * @throws HttpClientException 当请求执行失败（网络异常、转换失败、非预期状态码等）时抛出
 	 */
-	<S, T> ResponseEntity<T> doRequest(@NonNull RequestEntity<S> requestEntity, @NonNull Type responseType)
-			throws HttpClientException;
+	<S, T> ResponseEntity<T> doRequest(@NonNull RequestEntity<S> requestEntity, @NonNull Type responseType);
 
 	/**
 	 * 重载的请求执行方法，提供更灵活的参数配置（简化请求构建流程）。
@@ -112,11 +110,9 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * @param body         请求体（可为null；如POST请求的表单数据或JSON）
 	 * @param bodyClass    转换后的请求体类型（可为null；若为null则不强制转换请求体）
 	 * @return 扩展的响应实体{@link HttpResponseEntity}，支持进一步转换响应体
-	 * @throws HttpClientException 当请求构建或执行失败时抛出
 	 */
 	default <S, T> HttpResponseEntity<T> doRequest(@NonNull String uri, @NonNull HttpMethod httpMethod,
-			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass)
-			throws HttpClientException {
+			@NonNull Type responseType, Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass) {
 		// 获取请求的Content-Type（用于参数和请求体转换）
 		MediaType requestContentType = httpHeaders == null ? null : httpHeaders.getContentType();
 
@@ -179,8 +175,9 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * @param httpHeaders     自定义请求头（可为null）
 	 * @return 扩展的响应实体，支持响应体转换
 	 */
-	default <T> HttpResponseEntity<T> doEntitylessRequest(@NonNull String uri, Object params, @NonNull HttpMethod httpMethod,
-			@NonNull MediaType acceptMediaType, @NonNull Type responseType, HttpHeaders httpHeaders) {
+	default <T> HttpResponseEntity<T> doEntitylessRequest(@NonNull String uri, Object params,
+			@NonNull HttpMethod httpMethod, @NonNull MediaType acceptMediaType, @NonNull Type responseType,
+			HttpHeaders httpHeaders) {
 		// 合并请求头：优先使用用户传入的头，否则创建新头
 		HttpHeaders headers = new HttpHeaders();
 		if (httpHeaders != null) {
@@ -211,9 +208,9 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * @param bodyClass       转换后的请求体类型（可为null）
 	 * @return 扩展的响应实体，支持响应体转换
 	 */
-	default <S, T> HttpResponseEntity<T> doEntityRequest(@NonNull String uri, Object params, @NonNull HttpMethod httpMethod,
-			@NonNull MediaType acceptMediaType, @NonNull Type responseType, HttpHeaders httpHeaders,
-			@NonNull MediaType contentType, Object content, Class<S> bodyClass) {
+	default <S, T> HttpResponseEntity<T> doEntityRequest(@NonNull String uri, Object params,
+			@NonNull HttpMethod httpMethod, @NonNull MediaType acceptMediaType, @NonNull Type responseType,
+			HttpHeaders httpHeaders, @NonNull MediaType contentType, Object content, Class<S> bodyClass) {
 		// 合并请求头
 		HttpHeaders headers = new HttpHeaders();
 		if (httpHeaders != null) {
@@ -239,10 +236,10 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * @param keyMaterialResource 包含私钥和证书链的密钥库资源（不可为null）
 	 * @param storePassword       密钥库密码（解锁密钥库，不可为null）
 	 * @param keyPassword         私钥密码（解锁私钥，不可为null）
-	 * @throws HttpClientException 当资源无效、密码错误或SSLContext创建失败时抛出
+	 * @throws WebException 当资源无效、密码错误或SSLContext创建失败时抛出
 	 */
 	default void loadKeyMaterial(@NonNull Resource keyMaterialResource, @NonNull String storePassword,
-			@NonNull String keyPassword) throws HttpClientException {
+			@NonNull String keyPassword) {
 		// 验证资源有效性
 		if (!keyMaterialResource.exists()) {
 			throw new IllegalArgumentException("Key material resource not found: " + keyMaterialResource);
@@ -260,8 +257,7 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 			}
 		} catch (KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException
 				| CertificateException | IOException e) {
-			throw new HttpClientException(
-					"Failed to load SSL key material from " + keyMaterialResource.getDescription(), e);
+			throw new WebException("Failed to load SSL key material from " + keyMaterialResource.getDescription(), e);
 		}
 
 		// 应用SSL上下文到HTTP客户端
@@ -275,9 +271,9 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 	 * </p>
 	 * 
 	 * @param sslContext 要应用的SSL上下文（null表示使用默认安全配置）
-	 * @throws HttpClientException 当SSL上下文配置失败（如不支持的协议、无效配置）时抛出
+	 * @throws WebException 当SSL上下文配置失败（如不支持的协议、无效配置）时抛出
 	 */
-	default void setSSLContext(SSLContext sslContext) throws HttpClientException {
-		throw new UnsupportedOperationException("Not supported in default implementation, please override");
+	default void setSSLContext(SSLContext sslContext) throws WebException {
+		throw new WebException("Not supported in default implementation, please override");
 	}
 }
