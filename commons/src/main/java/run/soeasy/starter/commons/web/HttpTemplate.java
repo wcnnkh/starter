@@ -2,6 +2,7 @@ package run.soeasy.starter.commons.web;
 
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.net.ssl.SSLContext;
 
@@ -101,8 +102,13 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 			if (StringUtils.isEmpty(uri)) {
 				uri = host;
 			} else {
-				URI requestUri = URI.create(uri);
-				if (StringUtils.isEmpty(requestUri.getHost())) {
+				URI requestUri;
+				try {
+					requestUri = new URI(uri);
+					if (StringUtils.isEmpty(requestUri.getHost())) {
+						uri = org.springframework.util.StringUtils.cleanPath(host + uri);
+					}
+				} catch (URISyntaxException e) {
 					uri = org.springframework.util.StringUtils.cleanPath(host + uri);
 				}
 			}
