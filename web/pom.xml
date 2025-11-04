@@ -15,10 +15,6 @@
 		</dependency>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
-			<artifactId>security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.starter</groupId>
 			<artifactId>jackson</artifactId>
 		</dependency>
 		<dependency>

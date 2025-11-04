@@ -144,11 +144,6 @@
 				<artifactId>web</artifactId>
 				<version>0.0.8</version>
 			</dependency>
-			<dependency>
-				<groupId>run.soeasy.starter</groupId>
-				<artifactId>security</artifactId>
-				<version>0.0.8</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -326,6 +321,5 @@
 		<module>apple</module>
 		<module>jackson</module>
 		<module>web</module>
-		<module>security</module>
 	</modules>
 </project>
