@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.6 -DgenerateBackupPoms=false -->
-	<version>0.0.6</version>
+	<!-- mvn versions:set -DnewVersion=0.0.8 -DgenerateBackupPoms=false -->
+	<version>0.0.8</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,26 +43,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.starter.version>0.0.6</run.soeasy.starter.version>
 		<run.soeasy.framework.version>0.0.7</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
-		<bouncycastle.version>1.70</bouncycastle.version>
 		<wechatpay-java.version>0.2.17</wechatpay-java.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>com.github.wechatpay-apiv3</groupId>
-				<artifactId>wechatpay-java</artifactId>
-				<version>${wechatpay-java.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15on</artifactId>
-				<version>${bouncycastle.version}</version>
-			</dependency>
-
 			<!-- Spring Cloud -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -126,21 +113,36 @@
 				<artifactId>xml</artifactId>
 				<version>${run.soeasy.framework.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>data</artifactId>
+				<version>${run.soeasy.framework.version}</version>
+			</dependency>
 			<!-- starter  -->
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>commons</artifactId>
-				<version>${run.soeasy.starter.version}</version>
+				<artifactId>common</artifactId>
+				<version>0.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>payment-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
+				<artifactId>apple</artifactId>
+				<version>0.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>security-starter</artifactId>
-				<version>${run.soeasy.starter.version}</version>
+				<artifactId>mybatis</artifactId>
+				<version>0.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>jackson</artifactId>
+				<version>0.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>web</artifactId>
+				<version>0.0.8</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -176,6 +178,10 @@
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
 			<artifactId>xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.framework</groupId>
+			<artifactId>data</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
@@ -310,8 +316,10 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>commons</module>
-		<module>payment-starter</module>
-		<module>security-starter</module>
+		<module>common</module>
+		<module>mybatis</module>
+		<module>apple</module>
+		<module>jackson</module>
+		<module>web</module>
 	</modules>
 </project>
