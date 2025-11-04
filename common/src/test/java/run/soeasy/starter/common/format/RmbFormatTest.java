@@ -1,4 +1,4 @@
-package run.soeasy.starter.commons.format;
+package run.soeasy.starter.common.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.core.convert.TypeDescriptor;
-
-import run.soeasy.starter.common.format.RmbFormat;
 
 public class RmbFormatTest {
 	@Test

@@ -1,10 +1,8 @@
-package run.soeasy.starter.commons.format;
+package run.soeasy.starter.common.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-
-import run.soeasy.starter.common.format.NumberReplacer;
 
 public class NumberReplacerTest {
 	@Test

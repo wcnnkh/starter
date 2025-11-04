@@ -1,4 +1,4 @@
-package run.soeasy.starter.commons.format;
+package run.soeasy.starter.common.format;
 
 import java.util.HashMap;
 import java.util.Map;
