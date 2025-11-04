@@ -5,17 +5,19 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.8</version>
 	</parent>
-	<artifactId>security-starter</artifactId>
-	<name>security-starter</name>
-	<description>安全相关，如授权与认证</description>
+	<artifactId>mybatis-provided</artifactId>
+	<name>mybatis-provided</name>
+	<description>mybatis的相关扩展</description>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
 			<artifactId>common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.5.10</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -5,17 +5,13 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.8</version>
 	</parent>
-	<artifactId>payment-starter</artifactId>
-	<name>payment-starter</name>
-	<description>支付相关</description>
+	<artifactId>apple</artifactId>
+	<name>apple</name>
+	<description>提供Apple相关的集成，如支付...</description>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
 			<artifactId>common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.wechatpay-apiv3</groupId>
-			<artifactId>wechatpay-java</artifactId>
 		</dependency>
 	</dependencies>
 </project>

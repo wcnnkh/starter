@@ -1,4 +1,4 @@
-package run.soeasy.starter.payment.apple;
+package run.soeasy.starter.apple.payment;
 
 import lombok.Data;
 
