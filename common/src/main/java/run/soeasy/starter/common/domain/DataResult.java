@@ -42,7 +42,7 @@ public class DataResult<T> extends Result {
      * 基于核心响应实例构建带数据载体的响应
      * <p>
      * 复用父类 {@link Result} 的状态信息（code、msg、success），初始化空数据载体，
-     * 适用于从已有核心响应扩展数据的场景（如通过 {@link Result#newDataResult(Object)} 方法调用）。
+     * 适用于从已有核心响应扩展数据的场景（如通过 {@link Result#data(Object)} 方法调用）。
      *
      * @param result 核心响应实例（包含 code、msg、success 状态信息，可为 null）
      */

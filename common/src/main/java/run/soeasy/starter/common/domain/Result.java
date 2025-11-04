@@ -85,11 +85,6 @@ public class Result implements Serializable {
      * @param data 业务数据（如用户详情、单个实体DTO、基本类型数据等）
      * @param <T>  业务数据的泛型类型
      * @return 带数据的 {@link DataResult} 实例
-     * @example
-     * // 基于默认成功状态添加数据响应
-     * UserDTO user = userService.getById(userId);
-     * return Result.SUCCESS.data(user);
-     * // 响应结果：code=200、msg="操作成功(Operation successful)"、data=用户信息
      */
     public <T> DataResult<T> data(T data) {
         DataResult<T> dataResult = new DataResult<>(this);
@@ -105,10 +100,6 @@ public class Result implements Serializable {
      *
      * @param <T> 业务数据的泛型类型
      * @return 无数据的 {@link DataResult} 实例
-     * @example
-     * // 自定义成功状态且无数据响应
-     * Result customSuccess = Result.builder().code(201).msg("创建成功(Created successfully)").success(true).build();
-     * return customSuccess.data();
      */
     public <T> DataResult<T> data() {
         return new DataResult<>(this);
@@ -124,11 +115,6 @@ public class Result implements Serializable {
      * @param rows  当前页的行数据列表（如分页查询后的实体DTO集合）
      * @param <T>   行数据的泛型类型
      * @return 带分页数据的 {@link TableResult} 实例
-     * @example
-     * // 分页查询用户列表，返回成功分页响应
-     * List<UserDTO> userList = userService.pageQuery(pageNum, pageSize);
-     * long total = userService.countTotal();
-     * return Result.SUCCESS.table(total, userList);
      */
     public <T> TableResult<T> table(long total, List<T> rows) {
         TableResult<T> tableResult = new TableResult<>(this);
@@ -145,10 +131,6 @@ public class Result implements Serializable {
      *
      * @param <T> 行数据的泛型类型
      * @return 无分页数据的 {@link TableResult} 实例
-     * @example
-     * // 分页查询无匹配数据，返回空分页响应
-     * Result success = Result.SUCCESS;
-     * return success.table(); // total=0，rows=null，状态码和消息沿用SUCCESS
      */
     public <T> TableResult<T> table() {
         return new TableResult<>(this);
@@ -180,11 +162,6 @@ public class Result implements Serializable {
      * @param msg  具体错误提示消息（建议格式：中文提示(英文提示)）
      * @param <T>  数据泛型（失败场景通常为 null）
      * @return 带自定义错误信息的 {@link DataResult} 实例
-     * @example
-     * // 参数校验失败响应
-     * if (StringUtils.isEmpty(username)) {
-     *     return Result.error(400, "用户名不能为空(Username cannot be empty)");
-     * }
      */
     public static <T> DataResult<T> error(Integer code, String msg) {
         DataResult<T> dataResult = new DataResult<>();
@@ -203,11 +180,6 @@ public class Result implements Serializable {
      * @param msg 具体错误提示消息（如"数据库查询失败(Database query failed)"）
      * @param <T> 数据泛型（失败场景通常为 null）
      * @return 带自定义错误消息的 {@link DataResult} 实例
-     * @example
-     * // 业务逻辑失败响应
-     * if (goodsIsOutOfStock) {
-     *     return Result.error("该商品已售罄，无法下单(The product is out of stock and cannot be ordered)");
-     * }
      */
     public static <T> DataResult<T> error(String msg) {
         return error(ERROR.getCode(), msg);
@@ -222,11 +194,6 @@ public class Result implements Serializable {
      * @param code 自定义错误状态码（如 401=未授权、403=权限不足、503=服务不可用）
      * @param <T>  数据泛型（失败场景通常为 null）
      * @return 带自定义状态码的 {@link DataResult} 实例
-     * @example
-     * // 未授权访问失败响应
-     * if (userNotAuthorized) {
-     *     return Result.error(401);
-     * }
      */
     public static <T> DataResult<T> error(Integer code) {
         return error(code, ERROR.getMsg());
@@ -240,11 +207,6 @@ public class Result implements Serializable {
      *
      * @param <T> 数据泛型（失败场景通常为 null，仅为兼容 {@link DataResult} 结构）
      * @return 无数据的默认失败 {@link DataResult} 实例
-     * @example
-     * // 接口返回通用失败
-     * if (operationFailed) {
-     *     return Result.error();
-     * }
      */
     public static <T> DataResult<T> error() {
         return error().data();
@@ -259,9 +221,6 @@ public class Result implements Serializable {
      * @param msg  成功提示消息（建议格式：中文提示(英文提示)）
      * @param <T>  数据泛型（无数据时为 null）
      * @return 无数据的自定义成功 {@link DataResult} 实例
-     * @example
-     * // 资源创建成功响应
-     * return Result.success(201, "资源创建成功(Resource created successfully)");
      */
     public static <T> DataResult<T> success(Integer code, String msg) {
         DataResult<T> dataResult = new DataResult<>();
@@ -280,9 +239,6 @@ public class Result implements Serializable {
      * @param code 自定义成功状态码（如 201=创建成功、202=接受请求）
      * @param <T>  数据泛型（无数据时为 null）
      * @return 无数据的自定义状态码成功 {@link DataResult} 实例
-     * @example
-     * // 异步任务提交成功响应
-     * return Result.success(202);
      */
     public static <T> DataResult<T> success(Integer code) {
         return success(code, SUCCESS.getMsg());
@@ -297,9 +253,6 @@ public class Result implements Serializable {
      * @param msg 成功提示消息（建议格式：中文提示(英文提示)）
      * @param <T> 数据泛型（无数据时为 null）
      * @return 无数据的自定义提示成功 {@link DataResult} 实例
-     * @example
-     * // 数据更新成功响应
-     * return Result.success("数据更新成功(Data updated successfully)");
      */
     public static <T> DataResult<T> success(String msg) {
         return success(SUCCESS.getCode(), msg);
@@ -312,10 +265,6 @@ public class Result implements Serializable {
      *
      * @param <T> 数据泛型（无数据时为 null）
      * @return 无数据的默认成功 {@link DataResult} 实例
-     * @example
-     * // 数据删除成功响应
-     * userService.removeById(userId);
-     * return Result.success();
      */
     public static <T> DataResult<T> success() {
         return SUCCESS.data();
