@@ -5,8 +5,8 @@ import org.springframework.http.MediaType;
 
 import lombok.Getter;
 import lombok.Setter;
-import run.soeasy.starter.commons.jackson.JsonFormat;
-import run.soeasy.starter.commons.web.HttpTemplate;
+import run.soeasy.starter.common.jackson.JsonFormat;
+import run.soeasy.starter.common.web.HttpTemplate;
 
 /**
  * <a href=

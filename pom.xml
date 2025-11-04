@@ -128,7 +128,7 @@
 			<!-- starter  -->
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>commons</artifactId>
+				<artifactId>common</artifactId>
 				<version>0.0.8</version>
 			</dependency>
 			<dependency>
@@ -309,7 +309,7 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>commons</module>
+		<module>common</module>
 		<module>payment-starter</module>
 		<module>security-starter</module>
 	</modules>
