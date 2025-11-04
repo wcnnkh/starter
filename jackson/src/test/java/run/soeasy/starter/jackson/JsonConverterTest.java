@@ -1,4 +1,4 @@
-package run.soeasy.starter.common.format;
+package run.soeasy.starter.jackson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import run.soeasy.framework.core.convert.TypeDescriptor;
 import run.soeasy.framework.json.JsonConverter;
 import run.soeasy.framework.json.JsonElement;
-import run.soeasy.starter.common.jackson.JsonFormat;
 
 public class JsonConverterTest {
 	@SuppressWarnings("unchecked")

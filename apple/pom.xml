@@ -13,5 +13,9 @@
 			<groupId>run.soeasy.starter</groupId>
 			<artifactId>common</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>run.soeasy.starter</groupId>
+			<artifactId>web</artifactId>
+		</dependency>
 	</dependencies>
 </project>

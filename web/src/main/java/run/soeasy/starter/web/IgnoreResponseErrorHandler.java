@@ -1,4 +1,4 @@
-package run.soeasy.starter.common.web;
+package run.soeasy.starter.web;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package run.soeasy.starter.common.jackson;
+package run.soeasy.starter.jackson;
 
 import java.io.IOException;
 

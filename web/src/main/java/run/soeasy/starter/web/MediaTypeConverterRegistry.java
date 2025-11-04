@@ -1,12 +1,12 @@
-package run.soeasy.starter.common.web;
+package run.soeasy.starter.web;
 
 import org.springframework.http.MediaType;
 
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.core.exchange.container.map.TreeMapContainer;
-import run.soeasy.starter.common.jackson.JsonFormat;
-import run.soeasy.starter.common.jackson.XmlFormat;
+import run.soeasy.starter.jackson.JsonFormat;
+import run.soeasy.starter.jackson.XmlFormat;
 
 /**
  * 媒体类型转换器注册表，管理{@link MediaType}与{@link Converter}的映射关系，实现{@link MediaTypeConverterFactory}接口。

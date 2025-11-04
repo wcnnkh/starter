@@ -1,6 +1,6 @@
 package run.soeasy.starter.mybatis.type;
 
-import run.soeasy.starter.common.jackson.JsonFormat;
+import run.soeasy.starter.jackson.JsonFormat;
 
 /**
  * 默认的json处理

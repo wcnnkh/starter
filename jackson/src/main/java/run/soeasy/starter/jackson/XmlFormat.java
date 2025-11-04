@@ -1,4 +1,4 @@
-package run.soeasy.starter.common.jackson;
+package run.soeasy.starter.jackson;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;

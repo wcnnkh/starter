@@ -5,9 +5,9 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.8</version>
 	</parent>
-	<artifactId>mybatis</artifactId>
-	<name>mybatis</name>
-	<description>mybatis的相关扩展</description>
+	<artifactId>web</artifactId>
+	<name>web</name>
+	<description>web的相关扩展</description>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
@@ -15,12 +15,19 @@
 		</dependency>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
+			<artifactId>security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>run.soeasy.starter</groupId>
 			<artifactId>jackson</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.5.10</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 	</dependencies>
 </project>
