@@ -5,8 +5,8 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.8</version>
 	</parent>
-	<artifactId>mybatis-provided</artifactId>
-	<name>mybatis-provided</name>
+	<artifactId>mybatis</artifactId>
+	<name>mybatis</name>
 	<description>mybatis的相关扩展</description>
 	<dependencies>
 		<dependency>
@@ -17,7 +17,6 @@
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.5.10</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -126,7 +126,7 @@
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>mybatis-provided</artifactId>
+				<artifactId>mybatis</artifactId>
 				<version>0.0.8</version>
 			</dependency>
 		</dependencies>
@@ -298,7 +298,7 @@
 	</profiles>
 	<modules>
 		<module>common</module>
-		<module>mybatis-provided</module>
+		<module>mybatis</module>
 		<module>apple</module>
 	</modules>
 </project>
