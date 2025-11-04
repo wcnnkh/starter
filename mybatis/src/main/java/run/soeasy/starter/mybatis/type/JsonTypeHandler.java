@@ -1,5 +1,7 @@
 package run.soeasy.starter.mybatis.type;
 
+import lombok.NonNull;
+import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.starter.jackson.JsonFormat;
 
 /**
@@ -14,5 +16,8 @@ public class JsonTypeHandler<S> extends VarcharTypeHandler<S> {
 	public JsonTypeHandler() {
 		super(JsonFormat.DEFAULT);
 	}
-
+	
+	public JsonTypeHandler(@NonNull Converter converter) {
+		super(converter);
+	}
 }
