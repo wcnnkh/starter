@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.9 -DgenerateBackupPoms=false -->
-	<version>0.0.9</version>
+	<!-- mvn versions:set -DnewVersion=0.0.10 -DgenerateBackupPoms=false -->
+	<version>0.0.10</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -124,32 +124,32 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>common</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>apple</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jackson</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>web</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis-plus</artifactId>
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 			</dependency>
 			
 			<dependency>
