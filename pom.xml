@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.8 -DgenerateBackupPoms=false -->
-	<version>0.0.8</version>
+	<!-- mvn versions:set -DnewVersion=0.0.9 -DgenerateBackupPoms=false -->
+	<version>0.0.9</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -46,7 +46,9 @@
 		<run.soeasy.framework.version>0.0.7</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
-		<wechatpay-java.version>0.2.17</wechatpay-java.version>
+		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+		<mybatis.version>3.5.10</mybatis.version>
+		<pagehelper.version>5.3.3</pagehelper.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -122,27 +124,54 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>common</artifactId>
-				<version>0.0.8</version>
+				<version>0.0.9</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>apple</artifactId>
-				<version>0.0.8</version>
+				<version>0.0.9</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis</artifactId>
-				<version>0.0.8</version>
+				<version>0.0.9</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jackson</artifactId>
-				<version>0.0.8</version>
+				<version>0.0.9</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>web</artifactId>
-				<version>0.0.8</version>
+				<version>0.0.9</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>0.0.9</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>${mybatis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>${mybatis-plus.version}</version>
+			</dependency>
+			<!-- MyBatis-Plus 启动器 -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis-plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.pagehelper</groupId>
+				<artifactId>pagehelper</artifactId>
+				<version>${pagehelper.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -197,6 +226,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
@@ -321,5 +354,6 @@
 		<module>apple</module>
 		<module>jackson</module>
 		<module>web</module>
+		<module>mybatis-plus</module>
 	</modules>
 </project>

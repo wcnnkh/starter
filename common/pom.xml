@@ -3,15 +3,11 @@
 	<parent>
 		<groupId>run.soeasy.starter</groupId>
 		<artifactId>starter</artifactId>
-		<version>0.0.8</version>
+		<version>0.0.9</version>
 	</parent>
 	<artifactId>common</artifactId>
 	<name>common</name>
 	<description>公共模块</description>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
 	</dependencies>
 </project>

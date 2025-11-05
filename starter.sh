@@ -1,7 +1,7 @@
 #! /usr/bin/bash
 
 usage() {
-	echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
+	echo "Usage: sh starter.sh [start|stop|restart|status]"
 	exit 1
 }
 
