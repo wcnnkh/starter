@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.github.pagehelper.PageInterceptor;
 
 @Configuration
-public class PageHelperConfig {
+public class PageInterceptorAutoConfiguration {
 
 	@Bean(name = "pageHelperProperties")
 	@ConditionalOnMissingBean(name = "pageHelperProperties")
