@@ -3,8 +3,6 @@ package run.soeasy.starter.mybatisplus.autoconfigure;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
@@ -21,18 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnBean(value = { PageInterceptor.class })
 @RequiredArgsConstructor
 @Slf4j
-public class MybatisConfigurationPostProcessor implements BeanPostProcessor {
+public class MybatisPlusAutoConfiguration implements BeanPostProcessor {
 	@NonNull
 	private final PageInterceptor pageInterceptor;
-
-	@Bean
-	@ConditionalOnMissingBean(MybatisConfiguration.class)
-	public MybatisConfiguration mybatisConfiguration() {
-		MybatisConfiguration mybatisConfiguration = new MybatisConfiguration();
-		mybatisConfiguration.addInterceptor(pageInterceptor);
-		return mybatisConfiguration;
-	}
-
+	
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (bean instanceof MybatisConfiguration) {

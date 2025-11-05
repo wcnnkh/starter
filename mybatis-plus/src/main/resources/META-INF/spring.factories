@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-run.soeasy.starter.mybatisplus.autoconfigure.MybatisConfigurationPostProcessor
+run.soeasy.starter.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration

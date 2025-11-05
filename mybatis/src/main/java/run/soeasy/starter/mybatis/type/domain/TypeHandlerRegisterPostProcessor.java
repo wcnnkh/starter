@@ -1,23 +1,17 @@
-package run.soeasy.starter.mybatis.autoconfigure;
+package run.soeasy.starter.mybatis.type.domain;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import lombok.extern.slf4j.Slf4j;
-import run.soeasy.starter.mybatis.type.domain.BoxTypeHandler;
-import run.soeasy.starter.mybatis.type.domain.MeasuredValueTypeHandler;
-import run.soeasy.starter.mybatis.type.domain.OptionTypeHandler;
 
 /**
  * 注册默认 TypeHandler 的 BeanPostProcessor 拦截 MyBatis 的 Configuration，添加自定义
  * TypeHandler
  */
 @Slf4j
-@org.springframework.context.annotation.Configuration
-@ConditionalOnBean(Configuration.class) // 存在 MyBatis Configuration 时生效
 public class TypeHandlerRegisterPostProcessor implements BeanPostProcessor {
 
 	// 要注册的默认 TypeHandler（可添加多个）
