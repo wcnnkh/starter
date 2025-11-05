@@ -9,9 +9,5 @@
 	<name>common</name>
 	<description>公共模块</description>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
 	</dependencies>
 </project>

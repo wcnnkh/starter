@@ -48,6 +48,7 @@
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 		<mybatis.version>3.5.10</mybatis.version>
+		<pagehelper.version>5.3.3</pagehelper.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -146,6 +147,12 @@
 				<version>0.0.9</version>
 			</dependency>
 			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>0.0.9</version>
+			</dependency>
+			
+			<dependency>
 				<groupId>org.mybatis</groupId>
 				<artifactId>mybatis</artifactId>
 				<version>${mybatis.version}</version>
@@ -160,6 +167,11 @@
 				<groupId>com.baomidou</groupId>
 				<artifactId>mybatis-plus-boot-starter</artifactId>
 				<version>${mybatis-plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.pagehelper</groupId>
+				<artifactId>pagehelper</artifactId>
+				<version>${pagehelper.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -214,6 +226,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
@@ -338,5 +354,6 @@
 		<module>apple</module>
 		<module>jackson</module>
 		<module>web</module>
+		<module>mybatis-plus</module>
 	</modules>
 </project>

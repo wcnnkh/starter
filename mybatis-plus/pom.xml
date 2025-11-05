@@ -5,25 +5,15 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.9</version>
 	</parent>
-	<artifactId>mybatis</artifactId>
-	<name>mybatis</name>
-	<description>mybatis的相关扩展</description>
+	<artifactId>mybatis-plus</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
-			<artifactId>common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.starter</groupId>
-			<artifactId>jackson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper</artifactId>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
