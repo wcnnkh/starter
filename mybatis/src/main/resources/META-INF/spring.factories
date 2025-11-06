@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-run.soeasy.starter.mybatis.autoconfigure.TypeHandlerAutoConfiguration,\
-run.soeasy.starter.mybatis.autoconfigure.PageInterceptorAutoConfiguration
+run.soeasy.starter.mybatis.autoconfigure.MybatisAutoConfiguration

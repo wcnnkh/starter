@@ -10,9 +10,14 @@ import org.springframework.context.annotation.Configuration;
 
 import com.github.pagehelper.PageInterceptor;
 
-@Configuration
-public class PageInterceptorAutoConfiguration {
+import lombok.NonNull;
+import run.soeasy.starter.mybatis.entity.MybatisEntityFiller;
+import run.soeasy.starter.mybatis.pagehelper.PageInterceptorRegisterPostProcessor;
+import run.soeasy.starter.mybatis.plugin.FillMybatisEntityInterceptor;
+import run.soeasy.starter.mybatis.type.domain.TypeHandlerRegisterPostProcessor;
 
+@Configuration
+public class MybatisAutoConfiguration {
 	@Bean(name = "pageHelperProperties")
 	@ConditionalOnMissingBean(name = "pageHelperProperties")
 	@ConfigurationProperties(prefix = "pagehelper")
@@ -27,5 +32,22 @@ public class PageInterceptorAutoConfiguration {
 		PageInterceptor pageInterceptor = new PageInterceptor();
 		pageInterceptor.setProperties(pageHelperProperties());
 		return pageInterceptor;
+	}
+
+	@Bean
+	public TypeHandlerRegisterPostProcessor typeHandlerRegisterPostProcessor() {
+		return new TypeHandlerRegisterPostProcessor();
+	}
+
+	@Bean
+	public PageInterceptorRegisterPostProcessor pageInterceptorRegisterPostProcessor() {
+		return new PageInterceptorRegisterPostProcessor();
+	}
+
+	@Bean
+	@ConditionalOnBean(MybatisEntityFiller.class)
+	public FillMybatisEntityInterceptor fillMybatisEntityInterceptor(
+			@NonNull MybatisEntityFiller fillMybatisEntityFactory) {
+		return new FillMybatisEntityInterceptor(fillMybatisEntityFactory);
 	}
 }
