@@ -4,6 +4,7 @@ import java.util.Random;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import run.soeasy.framework.sequences.UUIDSequence;
 
 /**
  * 通用工具类，提供随机字符/字符串生成、HTTP 请求方法合法性判断等基础工具能力。
@@ -109,6 +110,10 @@ public class XUtils {
      */
     public static String randomCode(int length) {
         return new String(randomChars(new Random(), EASY_TO_DISTINGUISH, length));
+    }
+    
+    public static String randomUUID() {
+    	return UUIDSequence.random().next();
     }
 }
     
