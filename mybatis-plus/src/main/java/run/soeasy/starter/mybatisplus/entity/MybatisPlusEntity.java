@@ -22,7 +22,7 @@ public class MybatisPlusEntity implements MybatisEntity, Serializable {
 	@Version
 	private Long version;
 	/**
-	 * 租房字段
+	 * 租户字段
 	 */
 	private Long tenantId;
 }

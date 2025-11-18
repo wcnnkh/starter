@@ -8,7 +8,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.slf4j.Logger;
 
 import lombok.NonNull;
-import run.soeasy.framework.beans.BeanMapper;
+import run.soeasy.framework.beans.BeanUtils;
 import run.soeasy.framework.core.transform.property.PropertyAccessor;
 import run.soeasy.framework.core.transform.property.PropertyMappingFilter;
 import run.soeasy.framework.core.transform.property.TypedProperties;
@@ -32,7 +32,7 @@ public interface MybatisEntityFiller {
 		while (iterator.hasNext()) {
 			Object arg = iterator.next();
 			if (arg instanceof MybatisEntity) {
-				BeanMapper.copyProperties(fillEntity, arg, new PropertyMappingFilter() {
+				BeanUtils.copyProperties(fillEntity, arg, new PropertyMappingFilter() {
 
 					@Override
 					public boolean doMapping(

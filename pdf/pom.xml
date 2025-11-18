@@ -5,21 +5,28 @@
 		<artifactId>starter</artifactId>
 		<version>0.0.11</version>
 	</parent>
-	<artifactId>jackson</artifactId>
-	<name>jackson</name>
-	<description>jackson的相关扩展</description>
+	<artifactId>pdf</artifactId>
+	<name>PDF</name>
+	<description>PDF相关操作</description>
+	<properties>
+		<pdfbox.version>2.0.32</pdfbox.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
 			<artifactId>common</artifactId>
 		</dependency>
+		<!-- Apache PDFBox 核心依赖 -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
+		<!-- 处理 PDF 字体（避免中文/特殊字体报错） -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>fontbox</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
 	</dependencies>
 </project>
