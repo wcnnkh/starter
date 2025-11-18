@@ -39,7 +39,7 @@ import run.soeasy.framework.core.function.ThrowingSupplier;
  * File("test.pdf")).read(listener); 2. 新建文档并合并其他 PDF
  * 页面：PDF.build().addPages(otherPdf).save(new File("merged.pdf")); 3. 复用已有
  * PDDocument 实例：PDDocument doc = PDDocument.load(...); PDF.build(doc).split();
- * 4. 自定义加载逻辑（如带密码的 PDF）：PDF.build(() -> PDDocument.load(pdfFile, password));
+ * 4. 自定义加载逻辑（如带密码的 PDF）：PDF.build(() -&gt; PDDocument.load(pdfFile, password));
  * </p>
  */
 @RequiredArgsConstructor // Lombok 注解：生成包含所有 @NonNull 字段的构造器，用于初始化核心依赖 Pipeline
@@ -49,7 +49,7 @@ public class PDF implements PipelineWrapper<PDDocument, IOException, Pipeline<PD
 	/**
 	 * 构建空 PDF 文档实例
 	 * <p>
-	 * 内部通过 {@link PDDocument#new()} 创建空白文档，自动注册关闭回调，适用于需要手动添加页面、构建新 PDF 的场景。
+	 * 内部通过 {@link PDDocument} 创建空白文档，自动注册关闭回调，适用于需要手动添加页面、构建新 PDF 的场景。
 	 * 文档生命周期由当前实例管理，无需手动调用 {@link PDDocument#close()}。
 	 * </p>
 	 *
@@ -178,7 +178,7 @@ public class PDF implements PipelineWrapper<PDDocument, IOException, Pipeline<PD
 	 * </p>
 	 *
 	 * @param readListener 读取结果监听器（非空校验：避免空指针；功能要求：实现页面内容处理逻辑）
-	 * @param pageIndexs   目标页面索引数组（非空校验：避免空指针；有效范围：0 ≤ 索引 < 文档总页数，超出范围的索引会被忽略）
+	 * @param pageIndexs   目标页面索引数组（非空校验：避免空指针；有效范围：0 ≤ 索引 &lt; 文档总页数，超出范围的索引会被忽略）
 	 * @throws IOException 读取过程中发生的 IO 异常（如文档损坏、读取权限不足等）
 	 */
 	public void read(@NonNull PDFReadListener readListener, @NonNull int... pageIndexs) throws IOException {
@@ -194,7 +194,7 @@ public class PDF implements PipelineWrapper<PDDocument, IOException, Pipeline<PD
 	 * 若文档实例为空，返回空列表；拆分后的文件存储路径、命名规则由 {@link PDFSplitter} 定义（可通过其配置扩展）。
 	 * </p>
 	 *
-	 * @return List<File> - 拆分后的单页 PDF 文件列表（若拆分失败或文档为空，返回空列表）
+	 * @return List&lt;File&gt; - 拆分后的单页 PDF 文件列表（若拆分失败或文档为空，返回空列表）
 	 * @throws IOException 拆分过程中发生的 IO 异常（如文档损坏、存储路径无写入权限等）
 	 */
 	public List<File> split() throws IOException {
@@ -212,8 +212,8 @@ public class PDF implements PipelineWrapper<PDDocument, IOException, Pipeline<PD
 	 * {@link PDFSplitter} 执行定向拆分逻辑，返回拆分后的目标页面文件列表。
 	 * </p>
 	 *
-	 * @param pageIndexs 目标页面索引数组（非空校验：避免空指针；有效范围：0 ≤ 索引 < 文档总页数，超出范围的索引会被忽略）
-	 * @return List<File> - 拆分后的指定页面 PDF 文件列表（若拆分失败、文档为空或无有效索引，返回空列表）
+	 * @param pageIndexs 目标页面索引数组（非空校验：避免空指针；有效范围：0 ≤ 索引 &lt; 文档总页数，超出范围的索引会被忽略）
+	 * @return List&lt;File&gt; - 拆分后的指定页面 PDF 文件列表（若拆分失败、文档为空或无有效索引，返回空列表）
 	 * @throws IOException 拆分过程中发生的 IO 异常（如文档损坏、存储路径无写入权限等）
 	 */
 	public List<File> split(@NonNull int... pageIndexs) throws IOException {
