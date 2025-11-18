@@ -26,7 +26,7 @@ public abstract class AbstractTypeHandler<S, T> extends BaseTypeHandler<S> {
 	@SuppressWarnings("unchecked")
 	public Class<T> getJdbcType() {
 		if (this.jdbcType == null) {
-			this.jdbcType = (Class<T>) ResolvableType.forClass(getClass()).as(ConvertableTypeHandler.class)
+			this.jdbcType = (Class<T>) ResolvableType.forClass(getClass()).as(ConvertibleTypeHandler.class)
 					.getGeneric(1).getRawClass();
 		}
 		return this.jdbcType;

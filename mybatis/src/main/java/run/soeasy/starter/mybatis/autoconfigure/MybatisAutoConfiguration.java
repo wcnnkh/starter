@@ -14,7 +14,7 @@ import lombok.NonNull;
 import run.soeasy.starter.mybatis.entity.MybatisEntityFiller;
 import run.soeasy.starter.mybatis.pagehelper.PageInterceptorRegisterPostProcessor;
 import run.soeasy.starter.mybatis.plugin.FillMybatisEntityInterceptor;
-import run.soeasy.starter.mybatis.type.domain.TypeHandlerRegisterPostProcessor;
+import run.soeasy.starter.mybatis.type.TypeHandlerRegisterPostProcessor;
 
 @Configuration
 public class MybatisAutoConfiguration {
