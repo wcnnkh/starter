@@ -33,7 +33,6 @@ public class PageInterceptorRegisterPostProcessor implements BeanPostProcessor, 
 	}
 
 	private void addInterceptor(Configuration configuration, PageInterceptor pageInterceptor) {
-		System.out.println(pageInterceptor);
 		if (configuration.getInterceptors().stream().anyMatch(interceptor -> interceptor instanceof PageInterceptor)) {
 			return;
 		}
