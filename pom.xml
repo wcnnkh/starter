@@ -43,7 +43,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.framework.version>0.0.8</run.soeasy.framework.version>
+		<run.soeasy.framework.version>0.0.9</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
@@ -149,6 +149,11 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>pdf</artifactId>
+				<version>0.0.12</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>redis</artifactId>
 				<version>0.0.12</version>
 			</dependency>
 			
@@ -352,5 +357,6 @@
 		<module>web</module>
 		<module>mybatis-plus</module>
 		<module>pdf</module>
+		<module>redis</module>
 	</modules>
 </project>
