@@ -3,10 +3,10 @@
 	<parent>
 		<groupId>run.soeasy.starter</groupId>
 		<artifactId>starter</artifactId>
-		<version>0.0.11</version>
+		<version>0.0.12</version>
 	</parent>
 	<artifactId>pdf</artifactId>
-	<name>PDF</name>
+	<name>pdf</name>
 	<description>PDF相关操作</description>
 	<properties>
 		<pdfbox.version>2.0.32</pdfbox.version>

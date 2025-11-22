@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.11 -DgenerateBackupPoms=false -->
-	<version>0.0.11</version>
+	<!-- mvn versions:set -DnewVersion=0.0.12 -DgenerateBackupPoms=false -->
+	<version>0.0.12</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,7 +43,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.framework.version>0.0.8</run.soeasy.framework.version>
+		<run.soeasy.framework.version>0.0.9</run.soeasy.framework.version>
 		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
@@ -119,37 +119,42 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>common</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>apple</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jackson</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>web</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis-plus</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>pdf</artifactId>
-				<version>0.0.11</version>
+				<version>0.0.12</version>
+			</dependency>
+			<dependency>
+				<groupId>run.soeasy.starter</groupId>
+				<artifactId>redis</artifactId>
+				<version>0.0.12</version>
 			</dependency>
 			
 			<dependency>
@@ -352,5 +357,6 @@
 		<module>web</module>
 		<module>mybatis-plus</module>
 		<module>pdf</module>
+		<module>redis</module>
 	</modules>
 </project>
