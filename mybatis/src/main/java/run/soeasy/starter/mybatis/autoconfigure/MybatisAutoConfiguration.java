@@ -35,17 +35,20 @@ public class MybatisAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(TypeHandlerRegisterPostProcessor.class)
 	public TypeHandlerRegisterPostProcessor typeHandlerRegisterPostProcessor() {
 		return new TypeHandlerRegisterPostProcessor();
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(PageInterceptorRegisterPostProcessor.class)
 	public PageInterceptorRegisterPostProcessor pageInterceptorRegisterPostProcessor() {
 		return new PageInterceptorRegisterPostProcessor();
 	}
 
 	@Bean
 	@ConditionalOnBean(MybatisEntityFiller.class)
+	@ConditionalOnMissingBean(FillMybatisEntityInterceptor.class)
 	public FillMybatisEntityInterceptor fillMybatisEntityInterceptor(
 			@NonNull MybatisEntityFiller fillMybatisEntityFactory) {
 		return new FillMybatisEntityInterceptor(fillMybatisEntityFactory);
