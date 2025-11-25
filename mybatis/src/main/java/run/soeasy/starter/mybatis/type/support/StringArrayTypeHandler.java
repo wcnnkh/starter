@@ -6,7 +6,8 @@ import org.apache.ibatis.type.MappedTypes;
 
 import run.soeasy.starter.mybatis.type.JsonTypeHandler;
 
-@MappedTypes(Object[].class)
+@MappedTypes(String[].class)
 @MappedJdbcTypes({ JdbcType.VARCHAR, JdbcType.LONGVARCHAR, JdbcType.NVARCHAR, JdbcType.LONGNVARCHAR })
-public class ObjectArrayTypeHandler extends JsonTypeHandler<Object[]> {
+public class StringArrayTypeHandler extends JsonTypeHandler<String[]> {
 }
+

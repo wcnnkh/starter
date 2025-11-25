@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>run.soeasy.starter</groupId>
 		<artifactId>starter</artifactId>
-		<version>0.0.12</version>
+		<version>0.0.13</version>
 	</parent>
 	<artifactId>redis</artifactId>
 	<name>redis</name>
@@ -25,6 +25,12 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.lettuce</groupId>
+			<artifactId>lettuce-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
