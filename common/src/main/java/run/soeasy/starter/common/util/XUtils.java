@@ -1,6 +1,10 @@
 package run.soeasy.starter.common.util;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -12,6 +16,7 @@ import org.springframework.util.ClassUtils;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import run.soeasy.framework.core.RandomUtils;
+import run.soeasy.framework.core.collection.CollectionUtils;
 
 /**
  * 通用工具类集合
@@ -197,5 +202,15 @@ public class XUtils {
 	 */
 	public static Set<Class<?>> scanClasses(@NonNull String basePackage) {
 		return toClassSet(scanBeanDefinitions(basePackage), null);
+	}
+	
+	public static <S, T> Set<T> mapToNonNullSet(Collection<? extends S> source,
+			@NonNull Function<? super S, ? extends T> mapper) {
+		if (CollectionUtils.isEmpty(source)) {
+			return Collections.emptySet();
+		}
+
+		return source.stream().filter((e) -> e != null).map(mapper).filter((e) -> e != null)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 }
