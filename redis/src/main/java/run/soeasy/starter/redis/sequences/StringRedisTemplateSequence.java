@@ -1,12 +1,15 @@
 package run.soeasy.starter.redis.sequences;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.function.LongSupplier;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import lombok.NonNull;
+import run.soeasy.framework.core.StringUtils;
+import run.soeasy.starter.common.util.XUtils;
 
 /**
  * 基于Spring Data Redis {@link StringRedisTemplate} 的Redis序列实现。
@@ -20,7 +23,15 @@ public class StringRedisTemplateSequence extends AbstractRedisSequence {
 	private static final DefaultRedisScript<Long> NEXT_VALUE_REDIS_SCRIPT = new DefaultRedisScript<>();
 
 	static {
-		NEXT_VALUE_REDIS_SCRIPT.setScriptText(NEXT_VALUE_LUA_SCRIPT);
+		String location = AbstractRedisSequence.class.getPackage().getName().replace(".", "/")
+				+ "/stringRedisTemplate.lua";
+		String script;
+		try {
+			script = XUtils.getResource(location).toCharSequence().toString();
+		} catch (IOException e) {
+			throw new IllegalStateException("无法获取脚本资源:" + location);
+		}
+		NEXT_VALUE_REDIS_SCRIPT.setScriptText(script);
 		NEXT_VALUE_REDIS_SCRIPT.setResultType(Long.class);
 	}
 
@@ -38,14 +49,14 @@ public class StringRedisTemplateSequence extends AbstractRedisSequence {
 	}
 
 	@Override
-	protected Long executeNextValueScript(List<String> keys, List<Object> args) {
-		return stringRedisTemplate.execute(NEXT_VALUE_REDIS_SCRIPT, keys, args.toArray());
+	protected Long executeNextValue(String key, Long step, Long defaultValue) {
+		return stringRedisTemplate.execute(NEXT_VALUE_REDIS_SCRIPT, Arrays.asList(key), step.toString(), defaultValue == null? null:defaultValue.toString());
 	}
 
 	@Override
 	protected Long getKeyAsLong(String key) {
 		String value = stringRedisTemplate.opsForValue().get(key);
-		if (value == null) {
+		if (StringUtils.isEmpty(value)) {
 			return null;
 		}
 		return Long.parseLong(value);

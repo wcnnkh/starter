@@ -1,5 +1,6 @@
 package run.soeasy.starter.common.util;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -10,6 +11,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.ClassUtils;
 
@@ -17,6 +21,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import run.soeasy.framework.core.RandomUtils;
 import run.soeasy.framework.core.collection.CollectionUtils;
+import run.soeasy.starter.common.io.ResourceAdapter;
 
 /**
  * 通用工具类集合
@@ -203,7 +208,7 @@ public class XUtils {
 	public static Set<Class<?>> scanClasses(@NonNull String basePackage) {
 		return toClassSet(scanBeanDefinitions(basePackage), null);
 	}
-	
+
 	public static <S, T> Set<T> mapToNonNullSet(Collection<? extends S> source,
 			@NonNull Function<? super S, ? extends T> mapper) {
 		if (CollectionUtils.isEmpty(source)) {
@@ -212,5 +217,30 @@ public class XUtils {
 
 		return source.stream().filter((e) -> e != null).map(mapper).filter((e) -> e != null)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	public static ResourceAdapter[] getResources(@NonNull String locationPattern) throws IOException {
+		return getResources(locationPattern, null);
+	}
+
+	public static ResourceAdapter[] getResources(@NonNull String locationPattern, ClassLoader classLoader)
+			throws IOException {
+		PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver(
+				new DefaultResourceLoader());
+		Resource[] resources = patternResolver.getResources(locationPattern);
+		return ResourceAdapter.forResources(resources);
+	}
+
+	public static ResourceAdapter getResource(@NonNull String location) {
+		return getResource(location, null);
+	}
+
+	public static ResourceAdapter getResource(@NonNull String location, ClassLoader classLoader) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader(classLoader);
+		Resource resource = resourceLoader.getResource(location);
+		if (resource == null) {
+			return null;
+		}
+		return new ResourceAdapter(resource);
 	}
 }

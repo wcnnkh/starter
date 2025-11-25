@@ -1,20 +1,44 @@
 package run.soeasy.starter.redis.sequences;
 
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.LongSupplier;
 
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RScript.Mode;
 import org.redisson.api.RScript.ReturnType;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 
 import lombok.NonNull;
+import run.soeasy.starter.common.util.XUtils;
 
 /**
  * 基于Redisson客户端的Redis序列实现。
  */
 public class RedissonSequence extends AbstractRedisSequence {
+	private static final String SCRIPT1;
+	private static final String SCRIPT2;
+
+	static {
+		String location = AbstractRedisSequence.class.getPackage().getName().replace(".", "/")
+				+ "/redissonSequence1.lua";
+		try {
+			SCRIPT1 = XUtils.getResource(location).toCharSequence().toString();
+		} catch (IOException e) {
+			throw new IllegalStateException("无法获取脚本资源:" + location);
+		}
+	}
+
+	static {
+		String location = AbstractRedisSequence.class.getPackage().getName().replace(".", "/")
+				+ "/redissonSequence2.lua";
+		try {
+			SCRIPT2 = XUtils.getResource(location).toCharSequence().toString();
+		} catch (IOException e) {
+			throw new IllegalStateException("无法获取脚本资源:" + location);
+		}
+	}
 
 	@NonNull
 	private final RedissonClient redissonClient;
@@ -30,11 +54,17 @@ public class RedissonSequence extends AbstractRedisSequence {
 		super(key, initialValueSupplier);
 		this.redissonClient = redissonClient;
 	}
+	
+	@Override
+	protected Long executeNextValue(String key, Long step) {
+		return redissonClient.getScript(StringCodec.INSTANCE).eval(Mode.READ_WRITE, SCRIPT1, ReturnType.INTEGER,
+				Arrays.asList(key), step);
+	}
 
 	@Override
-	protected Long executeNextValueScript(List<String> keys, List<Object> args) {
-		return redissonClient.getScript().eval(Mode.READ_WRITE, NEXT_VALUE_LUA_SCRIPT, ReturnType.INTEGER,
-				Arrays.asList(keys.toArray()), args.toArray());
+	protected Long executeNextValue(String key, Long step, Long defaultValue) {
+		return redissonClient.getScript(StringCodec.INSTANCE).eval(Mode.READ_WRITE, SCRIPT2, ReturnType.INTEGER,
+				Arrays.asList(key), step, defaultValue);
 	}
 
 	@Override

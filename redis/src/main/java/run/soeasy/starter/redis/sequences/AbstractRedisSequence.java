@@ -1,8 +1,5 @@
 package run.soeasy.starter.redis.sequences;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.LongSupplier;
 
 import lombok.Getter;
@@ -25,16 +22,6 @@ public abstract class AbstractRedisSequence implements PersistentSequence {
 	protected final String key;
 	@NonNull
 	protected final LongSupplier initialValueSupplier;
-
-	/**
-	 * 原子获取下一个序列值的Lua脚本。 逻辑：存在则自增步长返回新值；不存在则用默认值初始化并返回；无默认值则返回null。
-	 */
-	protected static final String NEXT_VALUE_LUA_SCRIPT = "local current = redis.call('get', KEYS[1])\n"
-			+ "if current then\n" + "    current = tonumber(current)\n" + "    local newValue = current + ARGV[1]\n"
-			+ "    redis.call('set', KEYS[1], newValue)\n" + "    return newValue\n" + "else\n"
-			+ "    local defaultValue = ARGV[2]\n" + "    if defaultValue then\n"
-			+ "        redis.call('set', KEYS[1], defaultValue)\n" + "        return tonumber(defaultValue)\n"
-			+ "    else\n" + "        return nil\n" + "    end\n" + "end";
 
 	/**
 	 * {@inheritDoc}
@@ -61,13 +48,7 @@ public abstract class AbstractRedisSequence implements PersistentSequence {
 			throw new IllegalArgumentException("步长必须是大于0的正整数");
 		}
 
-		List<String> keys = Collections.singletonList(key);
-		List<Object> args = new ArrayList<>();
-		args.add(step.toString()); // 步长转字符串（适配所有客户端）
-		args.add(defaultValue != null ? defaultValue.toString() : null); // 默认值转字符串或null
-
-		Long result = executeNextValueScript(keys, args);
-
+		Long result = defaultValue == null ? executeNextValue(key, step) : executeNextValue(key, step, defaultValue);
 		if (result != null && log.isTraceEnabled()) {
 			log.trace("序列[{}]生成下一个值：{}", key, result);
 		}
@@ -106,16 +87,26 @@ public abstract class AbstractRedisSequence implements PersistentSequence {
 		return value != null ? value : 0;
 	}
 
-	// ------------------------------ 抽象方法（子类实现）------------------------------
+	/**
+	 * 如果序列不存在就返回空
+	 * 
+	 * @param key
+	 * @param step
+	 * @return
+	 */
+	protected Long executeNextValue(String key, Long step) {
+		return executeNextValue(key, step, null);
+	}
 
 	/**
-	 * 执行获取下一个序列值的Lua脚本。
-	 *
-	 * @param keys 脚本KEYS参数（序列键）
-	 * @param args 脚本ARGV参数（步长字符串、默认值字符串）
-	 * @return 序列值（null表示未初始化且无默认值）
+	 * 如果序列为空就设置为默认值
+	 * 
+	 * @param key
+	 * @param step
+	 * @param defaultValue
+	 * @return
 	 */
-	protected abstract Long executeNextValueScript(List<String> keys, List<Object> args);
+	protected abstract Long executeNextValue(String key, Long step, Long defaultValue);
 
 	/**
 	 * 获取指定键的长整型值。
