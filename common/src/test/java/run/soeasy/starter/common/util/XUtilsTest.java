@@ -2,6 +2,7 @@ package run.soeasy.starter.common.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -24,5 +25,10 @@ public class XUtilsTest {
 		// 注意：如果你的 XUtils.scan 方法在扫描时排除了测试类，这个断言会失败。
 		// 但根据我们当前的配置 (useDefaultFilters = false)，它应该能扫描到。
 		assertTrue(classSet.size() > 0, "扫描结果为空，请检查配置或包路径。");
+	}
+
+	@Test
+	public void getResources() throws IOException {
+		assert XUtils.getResources(getClass().getPackage().getName().replace(".", "/") + "/**.*").length > 0;
 	}
 }
