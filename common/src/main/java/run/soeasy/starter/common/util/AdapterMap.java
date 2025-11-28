@@ -44,7 +44,7 @@ public class AdapterMap<K, V> extends ConcurrentHashMap<K, V> implements BeanFac
     /**
      * Spring 的 Bean 工厂，用于获取所有符合条件的适配器 Bean。
      */
-    private BeanFactory beanFactory;
+    private transient BeanFactory beanFactory;
 
     /**
      * 用于解析适配器类型 {@code V} 的 {@link ResolvableType} 对象。
@@ -57,7 +57,7 @@ public class AdapterMap<K, V> extends ConcurrentHashMap<K, V> implements BeanFac
      * 这个函数在注册每个适配器时被调用。
      */
     @NonNull
-    private final Function<V, K> keyGenerator;
+    private transient final Function<V, K> keyGenerator;
 
     /**
      * 获取用于查找适配器 Bean 的 {@link ResolvableType}。
@@ -90,8 +90,12 @@ public class AdapterMap<K, V> extends ConcurrentHashMap<K, V> implements BeanFac
     @SuppressWarnings("unchecked")
     @Override
     public void afterPropertiesSet() throws Exception {
+    	BeanFactory beanFactory = getBeanFactory();
+    	if(beanFactory == null) {
+    		return ;
+    	}
         ResolvableType adapterType = getAdapterType();
-        ObjectProvider<Object> objectProvider = getBeanFactory().getBeanProvider(adapterType);
+        ObjectProvider<Object> objectProvider = beanFactory.getBeanProvider(adapterType);
         for (Object adapter : objectProvider) {
             V value = (V) adapter;
             K key = keyGenerator.apply(value);
