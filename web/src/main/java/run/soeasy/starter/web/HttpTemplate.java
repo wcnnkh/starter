@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import run.soeasy.framework.core.RandomUtils;
 import run.soeasy.framework.core.StringUtils;
 import run.soeasy.framework.core.convert.Converter;
 
@@ -58,6 +60,7 @@ import run.soeasy.framework.core.convert.Converter;
  */
 @Getter
 @Setter
+@Slf4j
 public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	private String host;
 
@@ -84,12 +87,16 @@ public class HttpTemplate extends RestTemplate implements HttpRequestExecutor {
 	 */
 	@Override
 	public <S, T> ResponseEntity<T> doRequest(RequestEntity<S> requestEntity, Type responseType) throws WebException {
-		return exchange(requestEntity, new ParameterizedTypeReference<T>() {
+		String traceId = RandomUtils.uuid();
+		log.trace("<{}> request {}", traceId, requestEntity);
+		ResponseEntity<T> response = exchange(requestEntity, new ParameterizedTypeReference<T>() {
 			@Override
 			public Type getType() {
 				return responseType;
 			}
 		});
+		log.trace("<{}> response {}", traceId, response);
+		return response;
 	}
 
 	/**
