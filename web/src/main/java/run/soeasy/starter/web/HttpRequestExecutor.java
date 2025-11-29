@@ -26,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
+import run.soeasy.starter.common.io.ResourceAdapter;
 
 /**
  * 函数式接口：HTTP请求执行器的核心抽象，整合媒体类型转换能力，定义HTTP客户端的通用操作契约。
@@ -221,6 +222,56 @@ public interface HttpRequestExecutor extends MediaTypeConverterFactory {
 		headers.setContentType(contentType);
 		// 调用通用doRequest方法执行请求（含请求体）
 		return doRequest(uri, httpMethod, responseType, params, headers, content, bodyClass);
+	}
+	
+	/**
+	 * 下载远程资源的便捷方法（默认使用GET请求）。
+	 * <p>
+	 * 简化远程文件/资源下载流程，将响应体转换为{@link ResourceAdapter}（Spring {@link Resource}的适配类），
+	 * 便于统一处理不同类型的资源（如文件、流、URL资源等）。
+	 * </p>
+	 * 
+	 * @param <S>   请求体的目标类型（本方法无请求体，泛型仅为兼容重载方法）
+	 * @param uri   资源的远程URI（不可为null，支持包含路径参数）
+	 * @param params 查询参数（可为null；支持String、Map或POJO对象，自动拼接为URI查询字符串）
+	 * @return 包含{@link ResourceAdapter}的扩展响应实体，封装了下载的资源及响应头/状态码
+	 * @throws IOException 当资源下载失败（如网络IO异常、响应体读取失败、资源不存在）时抛出
+	 * @see #download(String, HttpMethod, Object, HttpHeaders, Object, Class) 支持自定义HTTP方法的重载方法
+	 * @see ResourceAdapter Spring Resource的适配类，统一资源操作接口
+	 */
+	default <S> HttpResponseEntity<ResourceAdapter> download(@NonNull String uri, Object params) throws IOException {
+		return download(uri, HttpMethod.GET, params, null, null, null);
+	}
+
+	/**
+	 * 下载远程资源的通用方法（支持自定义HTTP方法、请求头、请求体）。
+	 * <p>
+	 * 核心下载逻辑实现：先通过{@link #doRequest}获取Spring {@link Resource}类型的响应体，
+	 * 再转换为{@link ResourceAdapter}以提供更通用的资源操作能力，支持POST/PUT等带请求体的下载场景。
+	 * </p>
+	 * 
+	 * @param <S>         请求体的目标类型（可为null，无请求体时传null即可）
+	 * @param uri         资源的远程URI（不可为null）
+	 * @param httpMethod  HTTP方法（不可为null；推荐GET/POST，根据服务端下载接口要求选择）
+	 * @param params      查询参数（可为null；自动拼接为URI查询字符串）
+	 * @param httpHeaders 自定义请求头（可为null；如设置Authorization、Range等下载相关头）
+	 * @param body        请求体（可为null；适用于POST下载接口需携带参数的场景）
+	 * @param bodyClass   转换后的请求体类型（可为null；无请求体时传null）
+	 * @return 包含{@link ResourceAdapter}的扩展响应实体，可通过该适配类读取资源流、获取资源元信息等
+	 * @throws IOException 当发生以下场景时抛出：
+	 *                    <ul>
+	 *                    <li>网络IO异常（如连接超时、响应截断）</li>
+	 *                    <li>响应体转换为Resource失败</li>
+	 *                    <li>ResourceAdapter初始化失败</li>
+	 *                    </ul>
+	 * @see #download(String, Object) 简化版GET下载方法
+	 * @see ResourceAdapter 封装Spring Resource，提供统一的资源访问API
+	 */
+	default <S> HttpResponseEntity<ResourceAdapter> download(@NonNull String uri, @NonNull HttpMethod httpMethod,
+			Object params, HttpHeaders httpHeaders, Object body, Class<S> bodyClass) throws IOException {
+		HttpResponseEntity<Resource> responseEntity = doRequest(uri, httpMethod, Resource.class, params, httpHeaders,
+				body, bodyClass);
+		return responseEntity.map(ResourceAdapter::new);
 	}
 
 	/**
