@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>run.soeasy.starter</groupId>
 		<artifactId>starter</artifactId>
-		<version>0.0.14</version>
+		<version>0.0.15</version>
 	</parent>
 	<artifactId>mybatis-plus</artifactId>
 	<name>mybatis-plus</name>
