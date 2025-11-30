@@ -33,7 +33,7 @@ import lombok.Setter;
  * @param <K> 映射中键的类型
  * @param <V> 映射中值的类型，通常是一个特定的接口或抽象类，所有适配器 Bean 都应实现或继承它
  * 
- * @author [你的名字或团队名称]
+ * @author soeasy.run
  * @see BeanFactoryAware
  * @see InitializingBean
  * @see ConcurrentHashMap

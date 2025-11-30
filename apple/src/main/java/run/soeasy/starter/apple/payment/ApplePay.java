@@ -12,7 +12,7 @@ import run.soeasy.starter.web.HttpTemplate;
  * <a href=
  * "https://developer.apple.com/documentation/appstorereceipts/verifyreceipt">文档</a>
  * 
- * @author wcnnkh
+ * @author soeasy.run
  *
  */
 @Getter

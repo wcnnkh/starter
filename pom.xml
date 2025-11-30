@@ -103,7 +103,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<framework.version>0.0.10</framework.version>
 		<spring.cloud.dependencies.version>2021.0.8</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
@@ -116,7 +115,7 @@
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
 				<artifactId>framework-dependencies</artifactId>
-				<version>${framework.version}</version>
+				<version>0.0.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
