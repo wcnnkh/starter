@@ -3,7 +3,6 @@ package run.soeasy.starter.jackson;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -84,7 +83,6 @@ public class XmlFormat extends XmlMapper implements JacksonFormat {
 	 *   <li>{@link SerializationFeature#WRITE_DATE_KEYS_AS_TIMESTAMPS}：日期字段序列化为时间戳</li>
 	 *   <li>{@link SerializationFeature#FAIL_ON_EMPTY_BEANS}：关闭，允许空对象序列化</li>
 	 *   <li>{@link JsonParser.Feature#ALLOW_SINGLE_QUOTES}：允许单引号作为字符串分隔符</li>
-	 *   <li>{@link MapperFeature#ACCEPT_CASE_INSENSITIVE_PROPERTIES}：忽略属性名大小写</li>
 	 * </ul>
 	 */
 	public void defaultProperties() {
@@ -93,7 +91,6 @@ public class XmlFormat extends XmlMapper implements JacksonFormat {
 		configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, true);
 		configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 	}
 
 	/**

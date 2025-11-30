@@ -3,8 +3,8 @@ package run.soeasy.starter.jackson;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -72,7 +72,7 @@ public class JsonFormat extends JsonMapper implements JacksonFormat, JsonConvert
 	public static final JsonFormat SNAKE_CASE = new JsonFormat();
 
 	static {
-		SNAKE_CASE.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		SNAKE_CASE.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 	}
 
 	/**
@@ -98,7 +98,6 @@ public class JsonFormat extends JsonMapper implements JacksonFormat, JsonConvert
 	 * <li>禁用{@link DeserializationFeature#FAIL_ON_UNKNOWN_PROPERTIES}忽略未知字段</li>
 	 * <li>启用{@link JsonInclude.Include#NON_NULL}过滤null值字段</li>
 	 * <li>启用{@link JsonParser.Feature#ALLOW_SINGLE_QUOTES}支持单引号</li>
-	 * <li>启用{@link MapperFeature#ACCEPT_CASE_INSENSITIVE_PROPERTIES}属性名不敏感</li>
 	 * </ul>
 	 */
 	public void defaultProperties() {
@@ -107,7 +106,6 @@ public class JsonFormat extends JsonMapper implements JacksonFormat, JsonConvert
 		configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, true);
 		configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 	}
 
 	/**

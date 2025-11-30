@@ -4,13 +4,13 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=0.0.14 -DgenerateBackupPoms=false -->
-	<version>0.0.14</version>
+	<!-- mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false -->
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.13</version>
+		<version>2.7.18</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<name>starter</name>
@@ -40,11 +40,70 @@
 		<url>https://github.com/wcnnkh/${project.name}.git</url>
 	</scm>
 
+	<repositories>
+		<repository>
+			<id>public</id>
+			<name>aliyun nexus</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-release</id>
+			<name>Spring Release</name>
+			<url>https://repo.spring.io/release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>public</id>
+			<name>aliyun nexus</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Plugin Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<modules>
+		<module>common</module>
+		<module>mybatis</module>
+		<module>apple</module>
+		<module>jackson</module>
+		<module>web</module>
+		<module>mybatis-plus</module>
+		<module>pdf</module>
+		<module>redis</module>
+	</modules>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<run.soeasy.framework.version>0.0.9</run.soeasy.framework.version>
-		<spring.cloud.dependencies.version>2020.0.5</spring.cloud.dependencies.version>
+		<spring.cloud.dependencies.version>2021.0.8</spring.cloud.dependencies.version>
 		<spring.cloud.alibaba.dependencies.version>2021.1</spring.cloud.alibaba.dependencies.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 		<mybatis.version>3.5.10</mybatis.version>
@@ -52,6 +111,14 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<!--           framework          -->
+			<dependency>
+				<groupId>run.soeasy.framework</groupId>
+				<artifactId>framework-dependencies</artifactId>
+				<version>0.0.1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<!-- Spring Cloud -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -69,94 +136,48 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<!--           framework          -->
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>core</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>aop</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>beans</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>dom</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>json</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>jdbc</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>messaging</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>slf4j</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>run.soeasy.framework</groupId>
-				<artifactId>xml</artifactId>
-				<version>${run.soeasy.framework.version}</version>
-			</dependency>
 			<!-- starter  -->
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>common</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>apple</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jackson</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>web</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis-plus</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>pdf</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>redis</artifactId>
-				<version>0.0.14</version>
+				<version>1.0.0</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.mybatis</groupId>
 				<artifactId>mybatis</artifactId>
@@ -183,39 +204,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.framework</groupId>
-			<artifactId>aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>dom</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>json</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>messaging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>xml</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>run.soeasy.framework</groupId>
-			<artifactId>slf4j</artifactId>
+			<artifactId>framework-all</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -349,14 +338,4 @@
 			</build>
 		</profile>
 	</profiles>
-	<modules>
-		<module>common</module>
-		<module>mybatis</module>
-		<module>apple</module>
-		<module>jackson</module>
-		<module>web</module>
-		<module>mybatis-plus</module>
-		<module>pdf</module>
-		<module>redis</module>
-	</modules>
 </project>
