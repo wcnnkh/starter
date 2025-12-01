@@ -11,7 +11,6 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.18</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<name>starter</name>
 	<description>快速开始项目</description>
@@ -39,55 +38,6 @@
 		<developerConnection>scm:git@https://github.com/wcnnkh/${project.name}.git</developerConnection>
 		<url>https://github.com/wcnnkh/${project.name}.git</url>
 	</scm>
-
-	<repositories>
-		<repository>
-			<id>public</id>
-			<name>aliyun nexus</name>
-			<url>https://maven.aliyun.com/repository/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-release</id>
-			<name>Spring Release</name>
-			<url>https://repo.spring.io/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>public</id>
-			<name>aliyun nexus</name>
-			<url>https://maven.aliyun.com/repository/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Plugin Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<modules>
 		<module>common</module>
