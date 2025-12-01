@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>commons</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>

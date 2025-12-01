@@ -40,7 +40,7 @@
 	</scm>
 
 	<modules>
-		<module>common</module>
+		<module>commons</module>
 		<module>mybatis</module>
 		<module>apple</module>
 		<module>jackson</module>
@@ -95,7 +95,7 @@
 			<!-- starter  -->
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
-				<artifactId>common</artifactId>
+				<artifactId>commons</artifactId>
 				<version>1.0.1</version>
 			</dependency>
 			<dependency>
