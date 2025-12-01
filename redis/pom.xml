@@ -8,9 +8,6 @@
 	<artifactId>redis</artifactId>
 	<name>redis</name>
 	<description>redis的相关扩展</description>
-	<properties>
-		<redisson.version>3.23.3</redisson.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
@@ -20,7 +17,6 @@
 		<dependency>
 			<groupId>org.redisson</groupId>
 			<artifactId>redisson</artifactId>
-			<version>${redisson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
