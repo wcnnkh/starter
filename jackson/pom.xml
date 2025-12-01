@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>run.soeasy.starter</groupId>
 		<artifactId>starter</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>jackson</artifactId>
 	<name>jackson</name>
@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>run.soeasy.starter</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>commons</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

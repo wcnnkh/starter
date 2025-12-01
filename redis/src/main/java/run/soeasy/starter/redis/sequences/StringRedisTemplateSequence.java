@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import lombok.NonNull;
 import run.soeasy.framework.core.StringUtils;
-import run.soeasy.starter.common.util.XUtils;
+import run.soeasy.starter.commons.util.XUtils;
 
 /**
  * 基于 Spring Data Redis 的 {@link StringRedisTemplate} 实现的分布式序列生成器。

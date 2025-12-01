@@ -11,7 +11,7 @@ import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 
 import lombok.NonNull;
-import run.soeasy.starter.common.util.XUtils;
+import run.soeasy.starter.commons.util.XUtils;
 
 /**
  * 基于 Redisson 客户端实现的分布式序列生成器。

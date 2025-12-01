@@ -26,7 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
 import run.soeasy.framework.messaging.convert.support.QueryStringFormat;
-import run.soeasy.starter.common.io.ResourceAdapter;
+import run.soeasy.starter.commons.io.ResourceAdapter;
 
 /**
  * 函数式接口：HTTP请求执行器的核心抽象，整合媒体类型转换能力，定义HTTP客户端的通用操作契约。
