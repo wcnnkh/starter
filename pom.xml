@@ -51,6 +51,7 @@
 	</modules>
 
 	<properties>
+		<soeasy.framework.version>0.0.2</soeasy.framework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<spring.cloud.dependencies.version>2021.0.8</spring.cloud.dependencies.version>
@@ -71,7 +72,7 @@
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
 				<artifactId>framework-dependencies</artifactId>
-				<version>0.0.1</version>
+				<version>${soeasy.framework.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
