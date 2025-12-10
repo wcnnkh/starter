@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 
 import lombok.NonNull;
 import run.soeasy.framework.beans.BeanUtils;
-import run.soeasy.framework.core.transform.property.PropertyAccessor;
-import run.soeasy.framework.core.transform.property.PropertyMappingFilter;
-import run.soeasy.framework.core.transform.property.TypedProperties;
-import run.soeasy.framework.core.transform.templates.Mapper;
-import run.soeasy.framework.core.transform.templates.MappingContext;
+import run.soeasy.framework.core.mapping.Mapper;
+import run.soeasy.framework.core.mapping.MappingContext;
+import run.soeasy.framework.core.mapping.property.PropertyAccessor;
+import run.soeasy.framework.core.mapping.property.PropertyMapping;
+import run.soeasy.framework.core.mapping.property.PropertyMappingFilter;
 
 public interface MybatisEntityFiller {
 	MybatisEntity getFillEntity(SqlCommandType sqlCommandType);
@@ -42,9 +42,9 @@ public interface MybatisEntityFiller {
 
 				@Override
 				public boolean doMapping(
-						@NonNull MappingContext<Object, PropertyAccessor, TypedProperties> sourceContext,
-						@NonNull MappingContext<Object, PropertyAccessor, TypedProperties> targetContext,
-						@NonNull Mapper<Object, PropertyAccessor, TypedProperties> mapper) {
+						@NonNull MappingContext<String, PropertyAccessor, PropertyMapping<PropertyAccessor>> sourceContext,
+						@NonNull MappingContext<String, PropertyAccessor, PropertyMapping<PropertyAccessor>> targetContext,
+						@NonNull Mapper<String, PropertyAccessor, PropertyMapping<PropertyAccessor>> mapper) {
 					if (sourceContext.hasKeyValue() && targetContext.hasKeyValue()) {
 						if (!forceUpdate) {
 							Object targetValue = targetContext.getKeyValue().getValue().get();

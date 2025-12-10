@@ -1,10 +1,12 @@
 package run.soeasy.starter.web;
 
+import java.util.Map.Entry;
+
 import org.springframework.http.MediaType;
 
 import lombok.NonNull;
 import run.soeasy.framework.core.convert.Converter;
-import run.soeasy.framework.core.exchange.container.map.TreeMapContainer;
+import run.soeasy.framework.core.spi.ServiceMap;
 import run.soeasy.starter.jackson.JsonFormat;
 import run.soeasy.starter.jackson.XmlFormat;
 
@@ -12,7 +14,7 @@ import run.soeasy.starter.jackson.XmlFormat;
  * 媒体类型转换器注册表，管理{@link MediaType}与{@link Converter}的映射关系，实现{@link MediaTypeConverterFactory}接口。
  * 
  * <p>
- * 作为基于{@link TreeMapContainer}的容器，提供媒体类型与转换器的注册、查询功能，支持：
+ * 作为基于{@link ServiceMap}的容器，提供媒体类型与转换器的注册、查询功能，支持：
  * <ul>
  * <li>单例模式的系统默认实例（通过{@link #system()}获取）</li>
  * <li>默认注册常用转换器（JSON/XML）</li>
@@ -26,10 +28,9 @@ import run.soeasy.starter.jackson.XmlFormat;
  * @see MediaTypeConverterFactory
  * @see MediaType
  * @see Converter
- * @see TreeMapContainer
+ * @see ServiceMap
  */
-public class MediaTypeConverterRegistry extends TreeMapContainer<MediaType, Converter>
-		implements MediaTypeConverterFactory {
+public class MediaTypeConverterRegistry extends ServiceMap<MediaType, Converter> implements MediaTypeConverterFactory {
 	/** 系统默认注册表实例（单例），线程安全的延迟初始化 */
 	private static volatile MediaTypeConverterRegistry system;
 
@@ -59,6 +60,10 @@ public class MediaTypeConverterRegistry extends TreeMapContainer<MediaType, Conv
 		return system;
 	}
 
+	public MediaTypeConverterRegistry() {
+		super(MediaType.SPECIFICITY_COMPARATOR);
+	}
+
 	/**
 	 * 根据媒体类型获取匹配的转换器，支持兼容类型查找。
 	 * <p>
@@ -75,11 +80,11 @@ public class MediaTypeConverterRegistry extends TreeMapContainer<MediaType, Conv
 	 */
 	@Override
 	public Converter getConverter(@NonNull MediaType mediaType) {
-		Converter converter = get(mediaType);
+		Converter converter = getValues(mediaType).first();
 		if (converter != null) {
 			return converter;
 		}
-		for (Entry<MediaType, Converter> entry : entrySet()) {
+		for (Entry<MediaType, Converter> entry : getDelegate().entrySet()) {
 			if (mediaType.isCompatibleWith(entry.getKey())) {
 				return entry.getValue();
 			}
