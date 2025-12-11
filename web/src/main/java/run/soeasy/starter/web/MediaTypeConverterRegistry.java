@@ -84,7 +84,7 @@ public class MediaTypeConverterRegistry extends ServiceMap<MediaType, Converter>
 		if (converter != null) {
 			return converter;
 		}
-		for (Entry<MediaType, Converter> entry : getDelegate().entrySet()) {
+		for (Entry<MediaType, Converter> entry : getContainer().entrySet()) {
 			if (mediaType.isCompatibleWith(entry.getKey())) {
 				return entry.getValue();
 			}
