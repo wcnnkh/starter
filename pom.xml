@@ -4,8 +4,8 @@
 	<artifactId>starter</artifactId>
 	<!-- generateBackupPoms 是否备份旧的pom.xml -->
 	<!-- newVersion 新的版本号 -->
-	<!-- mvn versions:set -DnewVersion=1.0.1 -DgenerateBackupPoms=false -->
-	<version>1.0.1</version>
+	<!-- mvn versions:set -DnewVersion=1.0.2 -DgenerateBackupPoms=false -->
+	<version>1.0.2</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -51,6 +51,7 @@
 	</modules>
 
 	<properties>
+		<soeasy.framework.version>0.0.2</soeasy.framework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<spring.cloud.dependencies.version>2021.0.8</spring.cloud.dependencies.version>
@@ -71,7 +72,7 @@
 			<dependency>
 				<groupId>run.soeasy.framework</groupId>
 				<artifactId>framework-dependencies</artifactId>
-				<version>0.0.1</version>
+				<version>${soeasy.framework.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -96,42 +97,42 @@
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>commons</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>apple</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>jackson</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>web</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>mybatis-plus</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>pdf</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>run.soeasy.starter</groupId>
 				<artifactId>redis</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 
 			<dependency>
@@ -214,6 +215,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
